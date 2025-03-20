@@ -1,5 +1,9 @@
 import pygame
 from Constants import config
+from States.state_manager import StateManager
+from States.game_state import Game_State
+from States.menu_state import Menu_State
+from States.pause_state import Pause_State
 
 class Game():
     """Manages the main game loop and window management."""
@@ -16,6 +20,16 @@ class Game():
 
         self.clock = pygame.time.Clock()  # Create a clock to manage frame rate
         self.running = True  # Controls the game loop execution
+        
+        # Initialize the state manager and add different game states
+        self.state_manager = StateManager() 
+        self.state_manager.add_state("Menu_State", Menu_State(self))
+        self.state_manager.add_state("Game_State", Game_State(self))
+        self.state_manager.add_state("Pause_State", Pause_State(self))
+
+        # Start the game in the main menu
+        self.state_manager.change_state("Menu_State")
+
 
     def run(self):
         """
@@ -31,8 +45,14 @@ class Game():
                 if event.type == pygame.QUIT:  
                     self.running = False  # Stop the game loop
 
+            # Update the current state based on user input
+            self.state_manager.update(events)
+
             # Clear the screen (set background to black)
             self.screen.fill((0, 0, 0))
+
+            # Draw the current state on the screen
+            self.state_manager.draw(self.screen)
 
             # Refresh the display
             pygame.display.flip()
