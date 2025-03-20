@@ -1,4 +1,5 @@
 from States.base_state import State 
+from Game.map import Map 
 
 class Game_State(State):
     """Main game engine - Manages the in-game logic, events, and rendering"""
@@ -11,6 +12,7 @@ class Game_State(State):
             game: Reference to the main game object, allowing access to shared resources.
         """
         super().__init__(game)  # Call the parent State class constructor
+        self.map = Map("Marsh_Mallows")
 
     def update(self, events):
         """
@@ -28,7 +30,8 @@ class Game_State(State):
         Args:
             screen: pygame display surface
         """
-        pass  # Placeholder for rendering logic
+        self.map.draw(screen) # Draw Map
+
 
     def handle_events(self, events):
         """
