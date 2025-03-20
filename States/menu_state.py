@@ -1,4 +1,5 @@
 from States.base_state import State
+import pygame
 
 class Menu_State(State):
     """Main menu engine - Manages the menu logic, events, and rendering"""
@@ -37,4 +38,7 @@ class Menu_State(State):
         Args:
             events: A list of events such as key presses or mouse clicks.
         """
-        pass  # Placeholder for event handling logic
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.game.state_manager.change_state("Game_State")
