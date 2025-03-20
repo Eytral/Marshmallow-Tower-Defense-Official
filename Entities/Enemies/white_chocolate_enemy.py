@@ -7,6 +7,13 @@ class WhiteChocolate(Enemy):
         self.sprite = sprites.WHITE_CHOCOLATE_SPRITE
         # self.melted_sprite = sprites.WHITE_CHOCOLATE_MELTED_SPRITE
 
+    def take_damage(self, damage, **kwargs):
+        if 'damage_type' in kwargs:
+            damage_type = kwargs['damage_type']
+        if damage_type == "Fire":
+            self.melt()
+        super().take_damage(damage)
+
     def melt(self):
         self.speed = 2
         # self.sprite = self.melted_sprite
