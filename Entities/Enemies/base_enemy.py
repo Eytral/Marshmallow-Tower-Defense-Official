@@ -10,6 +10,7 @@ class Enemy():
         self.speed = speed
 
         self.position = copy.deepcopy(start_position)
+        self.grid_position = (copy.deepcopy(start_position[0])//config.GRID_CELL_SIZE, copy.deepcopy(start_position[1])//config.GRID_CELL_SIZE)
         self.width, self.height = config.GRID_CELL_SIZE, config.GRID_CELL_SIZE
         self.hitbox = pygame.Rect(self.position[0], self.position[1], self.width, self.height)
 
@@ -23,6 +24,7 @@ class Enemy():
     def move(self):
         for _ in range(self.speed):
             # logic for movement
+            self.grid_position = self.position[0]//config.GRID_CELL_SIZE, self.position[1]//config.GRID_CELL_SIZE
             self.hitbox = pygame.Rect(self.position[0], self.position[1], config.GRID_CELL_SIZE, config.GRID_CELL_SIZE)
 
     def draw(self, screen):
@@ -39,7 +41,6 @@ class Enemy():
     def die(self):
         self.is_dead = True
         print(f"Enemy has reached end (of its life)")
-
 
     def update(self):
         self.move()
