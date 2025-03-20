@@ -1,2 +1,2 @@
-# Marshmallow Tower Defense Official
- Official Reorganised Tower defense pygame game project (theme of marshmalllows ;])
+# MarshmallowTowerDefense
+Marshmallow Tower Defense Game made using pygame; yr 12 pygame project 1
