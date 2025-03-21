@@ -38,12 +38,10 @@ class Bullet:
 
         If the bullet is not active (e.g., hit or out of bounds), it does nothing.
         """
+        self.move()
         if not self.active:
             return  # If the bullet is inactive, stop processing its update.
 
-        # Here, you would add logic to move the bullet and check if it reaches the target.
-        # For example:
-        # If the bullet reaches the target, deal damage and deactivate the bullet.
 
     def draw(self, screen):
         """
@@ -62,5 +60,7 @@ class Bullet:
         (e.g., linear, curved, or homing). It would update the x_pos and y_pos coordinates.
         """
         # Placeholder for movement logic:
-        self.hitbox = pygame.Rect(self.x_pos, self.y_pos, config.GRID_CELL_SIZE//5, config.GRID_CELL_SIZE//5)
-        # In this section, you would update the bullet's position using its speed or other movement logic.
+        for _ in range(self.speed): # Based on bullet speed
+            self.x_pos -= 1 # Placeholder for shooting logic; just shoots straight left
+            self.hitbox = pygame.Rect(self.x_pos, self.y_pos, self.width, self.height) # Update hitbox
+        # In this section, you would update the bullet's position by predicting enemy positioning
