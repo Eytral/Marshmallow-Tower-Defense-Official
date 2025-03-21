@@ -9,13 +9,13 @@ class Enemy(ABC):
     Inherited by specific enemy types to define movement, behavior, and damage handling.
     """
 
-    def __init__(self, game, start_position, reward=5, health=10, speed=2):
+    def __init__(self, start_position, end_position, path, reward=5, health=10, speed=2):
         """
         Initializes the enemy with its properties.
 
         Args:
-            game (Game): A reference to the game object, used for managing game state and interactions.
             start_position (tuple): Initial position (x, y) where the enemy is placed.
+            end_position ()
             reward (int): The reward points when the enemy is killed. Default is 5.
             health (int): The total health of the enemy. Default is 10.
             speed (int): The movement speed of the enemy. Default is 2.
@@ -26,9 +26,15 @@ class Enemy(ABC):
         self.speed = speed  # Movement speed
 
         # Position and grid position calculation
-        self.position = copy.deepcopy(start_position)  # Deep copy of starting position to avoid side effects
-        self.grid_position = (copy.deepcopy(start_position[0]) // config.GRID_CELL_SIZE, 
-                              copy.deepcopy(start_position[1]) // config.GRID_CELL_SIZE)  # Convert position to grid
+        self.position = [copy.deepcopy(start_position[0]) * config.GRID_CELL_SIZE, 
+                              copy.deepcopy(start_position[1]) * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT]  # Convert position to grid
+        self.grid_position = copy.deepcopy(start_position)  # Deep copy of starting position to avoid side effects
+
+        self.start_position = copy.deepcopy(start_position) # Stub for start position grid coords
+
+        self.end_position = [copy.deepcopy(end_position[0]) * config.GRID_CELL_SIZE, # Deep copy of starting position to avoid side effects
+                              copy.deepcopy(end_position[1]) * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT] # Stub for end position grid coords
+
         self.width, self.height = config.GRID_CELL_SIZE, config.GRID_CELL_SIZE  # Set width and height based on grid size
         self.hitbox = pygame.Rect(self.position[0], self.position[1], self.width, self.height)  # Hitbox for collision detection
 
@@ -37,7 +43,8 @@ class Enemy(ABC):
         self.reached_end = False  # Track if the enemy has reached the end of its path
         self.sprite = sprites.ENEMY_DEFAULT_SPRITE  # Default sprite for the enemy
 
-        self.game = game  # Store a reference to the game object for future use
+
+        self.path = path
 
     def move(self):
         """
@@ -45,11 +52,13 @@ class Enemy(ABC):
         that dictates the movement along the path or grid.
         """
         for _ in range(self.speed):
-            # Logic for movement based on speed, example:
-            # In this case, we would update the position using self.position, which needs movement logic.
-            # It currently updates the grid position based on the actual position.
+            
+            self.position[1] += 1
+
             self.grid_position = self.position[0] // config.GRID_CELL_SIZE, self.position[1] // config.GRID_CELL_SIZE
             self.hitbox = pygame.Rect(self.position[0], self.position[1], config.GRID_CELL_SIZE, config.GRID_CELL_SIZE)  # Update hitbox position
+
+            self.check_has_reached_end() # Checks if enemy has reached end
 
     def draw(self, screen):
         """
@@ -91,5 +100,10 @@ class Enemy(ABC):
         """
         self.move()  # Moves the enemy
         self.check_is_dead()  # Checks if the enemy is dead
-        self.check_has_reached_end()  # You might want to implement this method to check if the enemy has reached the goal
 
+    def check_has_reached_end(self):
+        """
+        Checks if the enemy has reached the end position
+        """
+        if self.position == self.end_position:
+            self.reached_end = True
