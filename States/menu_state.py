@@ -1,5 +1,6 @@
 from States.base_state import State
 import pygame
+from Constants import config
 
 class Menu_State(State):
     """Main menu engine - Manages the menu logic, events, and rendering"""
@@ -11,6 +12,7 @@ class Menu_State(State):
         Args:
             game: Reference to the main game object, allowing access to shared resources.
         """
+        self.title_font = pygame.font.Font(None, 74)  # Font for the title
         super().__init__(game)  # Call the parent State class constructor
 
     def update(self, events):
@@ -29,7 +31,11 @@ class Menu_State(State):
         Args:
             screen: pygame display surface
         """
-        pass  # Placeholder for rendering logic
+        title_surface = self.title_font.render("Press Enter to Start", True, (255, 255, 255))  # White color for title text
+        text_rect = title_surface.get_rect()  # Get the rect of the title text for positioning
+        text_rect.center = (config.SCREEN_WIDTH // 2, 150)  # Position the title at the center horizontally and near the top
+        screen.blit(title_surface, text_rect)  # Draw the title on the screen
+        
 
     def handle_events(self, events):
         """
