@@ -3,6 +3,7 @@ from Constants import config
 from Constants import sprites
 from Game.grid import Grid
 from Game.maps import MAP_DATA
+import copy
 
 class Map:
     """
@@ -24,7 +25,7 @@ class Map:
         if name not in MAP_DATA:
             raise ValueError(f"Map {name} not found")
         
-        self.map_grid = Grid(MAP_DATA[name]["grid"])
+        self.map_grid = Grid(copy.deepcopy(MAP_DATA[name]["grid"]))
         self.background_image = sprites.MARSH_MALLOWS_SPRITE
         self.music = MAP_DATA[name]["music"]
 
@@ -82,4 +83,4 @@ class Map:
         """
         Resets the map grid to its default state, removing any placed towers.
         """
-        self.map_grid.grid = MAP_DATA[self.name]["grid"]
+        self.map_grid.grid = copy.deepcopy(MAP_DATA[self.name]["grid"])
