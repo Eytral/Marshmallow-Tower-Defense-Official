@@ -28,6 +28,9 @@ class Tower(ABC):
         self.x_pos = x_grid_pos * config.GRID_CELL_SIZE
         self.y_pos = y_grid_pos * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT
 
+        self.x_centre_pos = self.x_pos + config.GRID_CELL_SIZE//2
+        self.y_centre_pos = self.y_pos + config.GRID_CELL_SIZE//2
+
         self.shoot_cooldown = 0  # Cooldown for shooting, starts at 0
         self.target = None  # The current target that the tower is shooting at
 
@@ -59,7 +62,7 @@ class Tower(ABC):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        self.bullets.append(Bullet(self.x_pos, self.y_pos, self.target, self.bullet_speed, self.bullet_damage))
+        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate

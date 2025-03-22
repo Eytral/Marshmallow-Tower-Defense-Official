@@ -1,5 +1,6 @@
 from Constants import config, sprites
 import pygame
+import math
 
 class Bullet:
     """
@@ -30,37 +31,71 @@ class Bullet:
         self.active = True  # Tracks whether the bullet is still active. If False, the bullet is removed.
 
         self.width, self.height = config.GRID_CELL_SIZE//5, config.GRID_CELL_SIZE//5  # Bullet's dimensions (scaled down from grid size)
+
+        # Predict where the enemy will be
+        self.target_x, self.target_y = self.predict_enemy_position()
+
+        # Compute velocity to move toward predicted position
+        self.vx, self.vy = self.get_bullet_velocity()
+
         self.hitbox = pygame.Rect(self.x_pos, self.y_pos, self.width, self.height)  # Bullet's hitbox for collision detection
 
+    def get_bullet_velocity(self):
+        """ Compute velocity vector to move toward predicted target position. """
+        dir_x = self.target_x - self.x_pos
+        dir_y = self.target_y - self.y_pos
+
+        magnitude = math.sqrt(dir_x**2 + dir_y**2)
+        if magnitude == 0:  
+            return 0, 0  # Avoid division by zero
+
+        # Scale by bullet speed
+        return (dir_x / magnitude) * self.speed, (dir_y / magnitude) * self.speed
+
     def update(self):
-        """
-        Updates the bullet's state. Moves the bullet and checks if it has hit the target.
-
-        If the bullet is not active (e.g., hit or out of bounds), it does nothing.
-        """
-        self.move()
+        """ Move the bullet and check if it reaches the target. """
         if not self.active:
-            return  # If the bullet is inactive, stop processing its update.
+            return
 
+        self.x_pos += self.vx
+        self.y_pos += self.vy
+        self.hitbox = pygame.Rect(self.x_pos, self.y_pos, config.GRID_CELL_SIZE//5, config.GRID_CELL_SIZE//5)
 
     def draw(self, screen):
-        """
-        Draws the bullet on the screen.
+        """ Render the bullet on screen. """
+        screen.blit(self.sprite, (self.x_pos, self.y_pos))
 
-        Args:
-            screen (pygame.Surface): The screen or surface where the bullet should be rendered.
-        """
-        screen.blit(self.sprite, (self.x_pos, self.y_pos))  # Draw the bullet's sprite at its current position
+    def predict_enemy_position(self):
+        """ Predict where the enemy will be when the bullet reaches it using iterative correction. """
+        # Get current and previous enemy positions
+        enemy_x, enemy_y = self.target.centre_position  # Current position
+    # print(f"bullet think enemyx is {enemy_x} and enemy is {enemy_y}")
+        prev_enemy_x, prev_enemy_y = self.target.prev_centre_position
 
-    def move(self):
-        """
-        Moves the bullet based on its current position and speed.
+        # Estimate enemy velocity
+        enemy_vx = enemy_x - prev_enemy_x  # Change in x
+        enemy_vy = enemy_y - prev_enemy_y  # Change in y
 
-        This method could be expanded to implement specific movement logic for the bullet
-        (e.g., linear, curved, or homing). It would update the x_pos and y_pos coordinates.
-        """
-        # Placeholder for movement logic:
-        for _ in range(self.speed): # Based on bullet speed
-            self.x_pos -= 1 # Placeholder for shooting logic; just shoots straight left
-            self.hitbox = pygame.Rect(self.x_pos, self.y_pos, self.width, self.height) # Update hitbox
-        # In this section, you would update the bullet's position by predicting enemy positioning
+        # Distance to current enemy position
+        distance = math.sqrt((enemy_x - self.x_pos) ** 2 + (enemy_y - self.y_pos) ** 2)
+        
+        # Time for bullet to reach the enemy's predicted position
+        time_to_target = distance / self.speed
+
+        # Iteratively adjust the prediction
+        for _ in range(5):  # Run several iterations to refine the prediction
+            # Predict enemy's future position based on its velocity
+            predicted_x = enemy_x + enemy_vx * time_to_target
+            predicted_y = enemy_y + enemy_vy * time_to_target
+
+            # Calculate the distance from the tower to the predicted point
+            distance = math.sqrt((predicted_x - self.x_pos) ** 2 + (predicted_y - self.y_pos) ** 2)
+            
+            # Recalculate time-to-target for the bullet to reach the new predicted position
+            time_to_target = distance / self.speed
+
+            # Update the enemy's predicted position
+            enemy_x = predicted_x
+            enemy_y = predicted_y
+
+        return predicted_x, predicted_y
