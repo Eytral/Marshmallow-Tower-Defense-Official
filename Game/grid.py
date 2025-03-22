@@ -35,7 +35,7 @@ class Grid:
                 raise IndexError  # Raise an exception if coordinates are out of bounds
         
         # Return tile type based on the value at the coordinates
-            if self.grid[grid_y][grid_x] == 1 or self.grid[grid_y][grid_x] == 3:
+            if self.grid[grid_y][grid_x] == 1 or self.grid[grid_y][grid_x] == 3 or self.grid[grid_y][grid_x] == 4:
                 return "path"  # A path tile
             elif self.grid[grid_y][grid_x] == 2:
                 return "tower"  # A tower tile
