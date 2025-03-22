@@ -30,17 +30,19 @@ class Grid:
         grid_x, grid_y = grid_coords[0], grid_coords[1]
         
         # Check if the coordinates are within the bounds of the grid
-        if grid_y >= len(self.grid) or grid_y < 0 or grid_x >= len(self.grid[0]) or grid_x < 0:
-            raise IndexError  # Raise an exception if coordinates are out of bounds
+        if grid_x is not None and grid_y is not None:
+            if grid_y >= len(self.grid) or grid_y < 0 or grid_x >= len(self.grid[0]) or grid_x < 0:
+                raise IndexError  # Raise an exception if coordinates are out of bounds
         
         # Return tile type based on the value at the coordinates
-        if grid_x is not None and grid_y is not None:
             if self.grid[grid_y][grid_x] == 1 or self.grid[grid_y][grid_x] == 3:
                 return "path"  # A path tile
             elif self.grid[grid_y][grid_x] == 2:
                 return "tower"  # A tower tile
             else:
                 return "empty space"  # An empty space tile
+        else:
+            return "outside grid"
 
     def set_tile(self, tile, grid_x, grid_y):
         """
@@ -58,7 +60,7 @@ class Grid:
         # Set the tile type at the specified grid coordinates
         self.grid[grid_y][grid_x] = tile
 
-    def draw(self, screen):
+    def draw(self, screen, grid_x, grid_y):
         """
         Renders the grid and highlights the selected cell (if any).
         
@@ -67,6 +69,7 @@ class Grid:
         """
         # Call the function to draw the grid
         self.draw_grid(screen)
+        self.highlight_square(screen, grid_x, grid_y)
 
     def draw_grid(self, screen):
         """
@@ -101,3 +104,15 @@ class Grid:
         # Draw a border around the entire grid
         border_rect = pygame.Rect(0, config.SCREEN_TOPBAR_HEIGHT, config.GRID_SIZE, config.GRID_SIZE)
         pygame.draw.rect(screen, (0, 0, 255), border_rect, 1)  # Blue border with thickness of 1
+
+    def highlight_square(self, screen, grid_x, grid_y):
+        """
+        Highlights the selected grid square.
+        
+        Args:
+            screen: pygame display surface.
+            grid_x: X-coordinate of the grid cell.
+            grid_y: Y-coordinate of the grid cell.
+        """
+        if grid_x is not None and grid_y is not None:
+            pygame.draw.rect(screen, (255, 0, 0), (grid_x * config.GRID_CELL_SIZE, grid_y * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT, config.GRID_CELL_SIZE, config.GRID_CELL_SIZE), 3)  # Red highlight

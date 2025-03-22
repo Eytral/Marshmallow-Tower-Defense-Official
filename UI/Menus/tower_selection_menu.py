@@ -66,12 +66,11 @@ class TowerSelectionMenu(Menu):
         Args:
             tower_type: The type of tower to place, passed as a class reference (e.g., a subclass of Tower).
         """
-        # Select tower
-        pass
+        self.game.state_manager.current_state.mouse.change_current_action("Placing Tower", tower_type)
 
     def remove_tower(self):
         """
         Allows the player to remove a tower.
         """
-        # Remove Tower
-        pass
+        self.game.state_manager.current_state.mouse.change_current_action("Removing Tower", None)
+        

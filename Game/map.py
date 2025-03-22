@@ -29,7 +29,7 @@ class Map:
         self.background_image = sprites.MARSH_MALLOWS_SPRITE
         self.music = MAP_DATA[name]["music"]
 
-    def draw(self, screen):
+    def draw(self, screen, grid_x, grid_y):
         """
         Renders the map background and grid.
         
@@ -37,7 +37,7 @@ class Map:
             screen: pygame display surface.
         """
         screen.blit(self.background_image, (0, config.SCREEN_TOPBAR_HEIGHT))
-        self.map_grid.draw(screen)
+        self.map_grid.draw(screen, grid_x, grid_y)
 
     def check_tile(self, grid_coords):
         """
@@ -61,6 +61,7 @@ class Map:
         """
         if self.check_tile((x,y)) == "empty space":
             self.map_grid.set_tile(2, x, y)
+            print("succesfully placed tower")
             return True
         else:
             return False

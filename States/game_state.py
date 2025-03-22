@@ -14,9 +14,9 @@ from Entities.Enemies.smore_enemy import Smore
 
 from UI.Menus.in_game_menu import GameButtons
 from UI.Menus.tower_selection_menu import TowerSelectionMenu
+from Game.mouse import Mouse
 
 import pygame
-import Game
 class Game_State(State):
     """Main game engine - Manages the in-game logic, events, and rendering"""
 
@@ -41,40 +41,11 @@ class Game_State(State):
         self.gamebuttons = GameButtons(self.game)
         self.tower_selection_menu = TowerSelectionMenu(self.game)
 
-        # Placeholder towers for testing/demonstration
-        placeholder_towers = [
-            (0, 0, BirdFlamethrower), 
-            (8, 2, Bomb), 
-            (6, 3, Laser), 
-            (2, 3, Saw), 
-            (9, 9, Turret)
-        ]
-        
-        # Create towers from placeholder data
-        for tower in placeholder_towers:
-            self.create_tower(*tower)
-
-        # Define path for enemy movement
-        path = [(4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (4, 9)]
-        start_position = (4, 0)
-        end_position = (4, 9)
-        
-        # Placeholder enemies for testing/demonstration
-        placeholder_enemies = [
-            (start_position, end_position, path, Marshmallow),
-            (start_position, end_position, path, Cracker),
-            (start_position, end_position, path, WhiteChocolate),
-            (start_position, end_position, path, DarkChocolate),
-            (start_position, end_position, path, Smore)
-        ]
-        
-        # Create enemies from placeholder data
-        for enemy in placeholder_enemies:
-            self.create_enemy(*enemy)
+        self.mouse = Mouse()
 
         self.difficulty = "Normal"
         self.health = 100 # Placeholder health value
-        self.money = 50 # Placeholder money value
+        self.money = 5000 # Placeholder money value
 
     def enter(self, *args):
         if args:
@@ -93,6 +64,9 @@ class Game_State(State):
         Args:
             events: A list of input events (e.g., keyboard/mouse actions).
         """
+        print(self.map.map_grid.grid)
+
+        self.mouse.update_mouse_pos()
         self.update_enemies()  # Update enemy positions and check for removals
         self.update_towers()   # Update tower behavior (attacking, targeting, etc.)
         self.check_bullet_collisions()  # Check and handle bullet collisions with enemies
@@ -126,7 +100,7 @@ class Game_State(State):
         Args:
             screen: pygame display surface
         """
-        self.map.draw(screen)  # Draw the game map
+        self.map.draw(screen, self.mouse.map_grid_x, self.mouse.map_grid_y)  # Draw the game map
         self.draw_towers(screen)  # Draw all towers
         self.draw_enemies(screen)  # Draw all enemies
         self.gamebuttons.draw(screen)
@@ -159,6 +133,33 @@ class Game_State(State):
                 for button in self.tower_selection_menu.buttons:
                     if button.is_hovered():
                         button.click()
+
+                if self.mouse.current_action == "Placing Tower":
+                    self.place_tower()
+
+                if self.mouse.current_action == "Removing Tower":
+                    self.remove_tower()
+
+    def place_tower(self):
+        """
+        Places a tower on the map grid and adds the selected tower to the game_state tower dict
+        """
+        if self.money >= self.mouse.current_selection(0,0).cost:
+            if self.map.place_tower(self.mouse.map_grid_x, self.mouse.map_grid_y): # If able to place tower
+                self.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)] = self.mouse.current_selection(self.mouse.map_grid_x, self.mouse.map_grid_y) # Create new tower object
+                self.money -= self.mouse.current_selection(0,0).cost # Removes the cost of the tower from money
+                print(f"successfully placed tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
+                self.mouse.change_current_action(None, None) # Reset mouse action and selection
+
+
+    def remove_tower(self): # If able to remove tower
+        """
+        Removes a tower on the map grid and removes the selected tower from the game_state tower dict
+        """
+        if self.map.remove_tower(self.mouse.map_grid_x, self.mouse.map_grid_y):
+            del self.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)] # Delete selected tower object (at selected map coordinate)
+            print(f"successfully deleted tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
+            self.mouse.change_current_action(None, None) # Reset mouse action and selection
 
     def create_tower(self, grid_x_position, grid_y_position, tower_type):
         """
