@@ -11,3 +11,10 @@ OFFSET_FROM_GRID = 3 # Offset size (from grid border)
 # Screen offset bars
 SCREEN_TOPBAR_HEIGHT = 80 # Height of topbar (for game buttons)
 SCREEN_SIDEBAR_WIDTH = 300 # Width of sidebar (for tower selection/modification)
+
+# Button Constants
+DEFAULT_MENU_BUTTON_Y_POSITION = 200
+
+DEFAULT_BUTTON_WIDTH, DEFAULT_BUTTON_HEIGHT = 200, 50
+DEFAULT_BUTTON_VERTICAL_OFFSET = 1.5
+DEFAULT_BUTTON_HORIZONTAL_OFFSET = 1.2

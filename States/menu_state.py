@@ -1,6 +1,10 @@
 from States.base_state import State
 import pygame
 from Constants import config
+from UI.Menus.main_menu import MainMenu
+from UI.Menus.options_menu import OptionsMenu
+from UI.Menus.level_select_menu import LevelSelectMenu
+from UI.Menus.game_over_menu import GameOverMenu
 
 class Menu_State(State):
     """Main menu engine - Manages the menu logic, events, and rendering"""
@@ -12,8 +16,19 @@ class Menu_State(State):
         Args:
             game: Reference to the main game object, allowing access to shared resources.
         """
-        self.title_font = pygame.font.Font(None, 74)  # Font for the title
         super().__init__(game)  # Call the parent State class constructor
+
+        self.menus = {
+            "MainMenu": MainMenu(self.game),
+            "OptionsMenu": OptionsMenu(self.game),
+            "LevelSelectMenu": LevelSelectMenu(self.game),
+            "GameOverMenu": GameOverMenu(self.game)
+        }
+        self.title_font = pygame.font.Font(None, 74)  # Font for the title
+
+        # Start with the MainMenu
+        self.change_menu("MainMenu")
+
 
     def update(self, events):
         """
@@ -31,11 +46,7 @@ class Menu_State(State):
         Args:
             screen: pygame display surface
         """
-        title_surface = self.title_font.render("Press Enter to Start", True, (255, 255, 255))  # White color for title text
-        text_rect = title_surface.get_rect()  # Get the rect of the title text for positioning
-        text_rect.center = (config.SCREEN_WIDTH // 2, 150)  # Position the title at the center horizontally and near the top
-        screen.blit(title_surface, text_rect)  # Draw the title on the screen
-        
+        self.current_menu.draw(screen)
 
     def handle_events(self, events):
         """
@@ -45,6 +56,16 @@ class Menu_State(State):
             events: A list of events such as key presses or mouse clicks.
         """
         for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for button in self.current_menu.buttons:
+                    if button.is_hovered():
+                        button.click()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.game.state_manager.change_state("Game_State")
+
+    def change_menu(self, menu_name):
+        """Switch to a different menu (MainMenu, OptionsMenu, etc.)"""
+        if menu_name in self.menus:
+            self.current_menu = self.menus[menu_name]

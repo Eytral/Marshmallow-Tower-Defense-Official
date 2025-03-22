@@ -12,8 +12,11 @@ from Entities.Enemies.white_chocolate_enemy import WhiteChocolate
 from Entities.Enemies.dark_chocolate_enemy import DarkChocolate
 from Entities.Enemies.smore_enemy import Smore
 
-import pygame
+from UI.Menus.in_game_menu import GameButtons
+from UI.Menus.tower_selection_menu import TowerSelectionMenu
 
+import pygame
+import Game
 class Game_State(State):
     """Main game engine - Manages the in-game logic, events, and rendering"""
 
@@ -34,6 +37,9 @@ class Game_State(State):
 
         # List to store active enemies
         self.enemies = []
+
+        self.gamebuttons = GameButtons(self.game)
+        self.tower_selection_menu = TowerSelectionMenu(self.game)
 
         # Placeholder towers for testing/demonstration
         placeholder_towers = [
@@ -65,6 +71,20 @@ class Game_State(State):
         # Create enemies from placeholder data
         for enemy in placeholder_enemies:
             self.create_enemy(*enemy)
+
+        self.difficulty = "Normal"
+        self.health = 100 # Placeholder health value
+        self.money = 50 # Placeholder money value
+
+    def enter(self, *args):
+        if args:
+            level_name = args[0]
+            self.level = level_name
+            self.map = Map(level_name)
+        print(f"Entering level {self.level}")
+
+    def change_difficulty(self, difficulty):
+        self.difficulty = difficulty
 
     def update(self, events):
         """
@@ -109,6 +129,9 @@ class Game_State(State):
         self.map.draw(screen)  # Draw the game map
         self.draw_towers(screen)  # Draw all towers
         self.draw_enemies(screen)  # Draw all enemies
+        self.gamebuttons.draw(screen)
+        self.tower_selection_menu.draw(screen)
+
 
     def draw_towers(self, screen):
         """Draw all towers on the screen."""
@@ -127,7 +150,15 @@ class Game_State(State):
         Args:
             events: A list of events such as key presses or mouse clicks.
         """
-        pass  # Placeholder for event handling logic
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for button in self.gamebuttons.buttons:
+                    if button.is_hovered():
+                        button.click()
+
+                for button in self.tower_selection_menu.buttons:
+                    if button.is_hovered():
+                        button.click()
 
     def create_tower(self, grid_x_position, grid_y_position, tower_type):
         """
