@@ -64,7 +64,7 @@ class GameButtons(Menu):
         """
         Starts the next game enemy wave
         """
-        # Start next wave
+        self.game.state_manager.current_state.wave_manager.next_wave()
         pass
 
     def pause_game(self):

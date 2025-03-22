@@ -6,15 +6,12 @@ from Entities.Towers.Laser_tower import Laser
 from Entities.Towers.Saw_tower import Saw
 from Entities.Towers.Turret_Tower import Turret
 
-from Entities.Enemies.marshmallow_enemy import Marshmallow
-from Entities.Enemies.cracker_enemy import Cracker
-from Entities.Enemies.white_chocolate_enemy import WhiteChocolate
-from Entities.Enemies.dark_chocolate_enemy import DarkChocolate
-from Entities.Enemies.smore_enemy import Smore
+from Game.game_data import ENEMY_CLASS_MAP
 
 from UI.Menus.in_game_menu import GameButtons
 from UI.Menus.tower_selection_menu import TowerSelectionMenu
 from Game.mouse import Mouse
+from Game.wave_manager import WaveManager
 
 import pygame
 class Game_State(State):
@@ -43,6 +40,8 @@ class Game_State(State):
 
         self.mouse = Mouse()
 
+        self.wave_manager = WaveManager(self.game)
+
         self.difficulty = "Normal"
         self.health = 100 # Placeholder health value
         self.money = 5000 # Placeholder money value
@@ -64,12 +63,11 @@ class Game_State(State):
         Args:
             events: A list of input events (e.g., keyboard/mouse actions).
         """
-        print(self.map.map_grid.grid)
-
         self.mouse.update_mouse_pos()
         self.update_enemies()  # Update enemy positions and check for removals
         self.update_towers()   # Update tower behavior (attacking, targeting, etc.)
         self.check_bullet_collisions()  # Check and handle bullet collisions with enemies
+        self.wave_manager.update()
         self.handle_events(events)  # Process player input and other events
 
     def update_enemies(self):
@@ -77,7 +75,11 @@ class Game_State(State):
         for enemy in self.enemies:
             enemy.update()
             if enemy.is_dead or enemy.reached_end:
-                self.enemies.remove(enemy)  # Remove enemy if it's dead or reaches the end
+                self.enemies.remove(enemy) # Remove enemy once reached end
+                if enemy.is_dead:
+                    self.money += enemy.reward # Reward money for enemy kill
+                if enemy.reached_end:
+                    self.health -= enemy.damage # Subtract health for failure to prevent enemy reaching end
 
     def update_towers(self):
         """Update all towers, making them attack enemies if applicable."""
@@ -146,7 +148,7 @@ class Game_State(State):
         """
         if self.money >= self.mouse.current_selection(0,0).cost:
             if self.map.place_tower(self.mouse.map_grid_x, self.mouse.map_grid_y): # If able to place tower
-                self.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)] = self.mouse.current_selection(self.mouse.map_grid_x, self.mouse.map_grid_y) # Create new tower object
+                self.create_tower(self.mouse.current_selection, (self.mouse.map_grid_x, self.mouse.map_grid_y)) # Create new tower object
                 self.money -= self.mouse.current_selection(0,0).cost # Removes the cost of the tower from money
                 print(f"successfully placed tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
                 self.mouse.change_current_action(None, None) # Reset mouse action and selection
@@ -161,26 +163,11 @@ class Game_State(State):
             print(f"successfully deleted tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
             self.mouse.change_current_action(None, None) # Reset mouse action and selection
 
-    def create_tower(self, grid_x_position, grid_y_position, tower_type):
-        """
-        Creates and places a tower on the map.
+    def create_enemy(self, enemy_name):
+        print(f"created enemy {enemy_name}")
+        enemy_class = ENEMY_CLASS_MAP.get(enemy_name)
+        if enemy_class:
+            self.enemies.append(enemy_class(self.map.enemy_start_pos, self.map.enemy_path))
         
-        Args:
-            grid_x_position (int): X-coordinate on the grid.
-            grid_y_position (int): Y-coordinate on the grid.
-            tower_type (class): The class of the tower to be instantiated.
-        """
-        self.towers[(grid_x_position, grid_y_position)] = tower_type(grid_x_position, grid_y_position)
-        self.map.place_tower(grid_x_position, grid_y_position)
-
-    def create_enemy(self, start_position, end_position, path, enemy_type):
-        """
-        Creates and adds an enemy to the game.
-        
-        Args:
-            start_position (tuple): The starting position of the enemy.
-            end_position (tuple): The ending position of the enemy.
-            path (list): The path the enemy follows.
-            enemy_type (class): The class of the enemy to be instantiated.
-        """
-        self.enemies.append(enemy_type(start_position, end_position, path))
+    def create_tower(self, tower, position):
+        self.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)] = tower(*position)
