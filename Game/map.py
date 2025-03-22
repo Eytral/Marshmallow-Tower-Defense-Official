@@ -80,6 +80,12 @@ class Map:
         else:
             return False
 
+    def determine_enemy_path(self):
+        return self.map_grid.find_path()
+        
+    def determine_enemy_start_pos(self):
+        return self.map_grid.find_enemy_start_pos()
+
     def reset_map(self):
         """
         Resets the map grid to its default state, removing any placed towers.

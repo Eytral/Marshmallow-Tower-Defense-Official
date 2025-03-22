@@ -116,3 +116,71 @@ class Grid:
         """
         if grid_x is not None and grid_y is not None:
             pygame.draw.rect(screen, (255, 0, 0), (grid_x * config.GRID_CELL_SIZE, grid_y * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT, config.GRID_CELL_SIZE, config.GRID_CELL_SIZE), 3)  # Red highlight
+
+
+
+    def find_path(self):
+    # Find the start position (3)
+        start = None
+        for r in range(len(self.grid)):
+            for c in range(len(self.grid[r])):
+                if self.grid[r][c] == 3:  # Look for the start marker
+                    start = (r, c)
+                    break
+            if start:
+                break
+
+        if not start:
+            print("Start position (3) not found in the grid.")
+            return []  # Return an empty list if start not found
+
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Movement directions
+
+        path = [start]
+        visited = set([start])
+        current_position = start
+
+        while True:
+            found_next_step = False
+            possible_moves = []
+
+            # Check all possible directions
+            for dr, dc in directions:
+                nr, nc = current_position[0] + dr, current_position[1] + dc
+
+                # Ensure we stay within bounds, check for valid path (1), and avoid revisiting cells
+                if 0 <= nr < len(self.grid) and 0 <= nc < len(self.grid[0]):
+                    if self.grid[nr][nc] == 1 and (nr, nc) not in visited:
+                        possible_moves.append((nr, nc))
+
+            if not possible_moves:
+                print(f"Dead end reached at {current_position}, breaking out.")
+                break  # No valid path found, exit loop
+
+            next_position = possible_moves[0]  # Pick the first valid move
+
+            # Add the next position to the path and mark it as visited
+            visited.add(next_position)
+            path.append(next_position)
+            current_position = next_position
+
+            print(f"Moving from {current_position} to {next_position}")
+
+        print(f"Enemy grid path: {path}")
+        # Convert the path coordinates into screen positions
+        path_positions = []
+        for coordinate in path:
+            x, y = (coordinate[1]) * config.GRID_CELL_SIZE, coordinate[0] * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT
+            path_positions.append((x, y))
+
+        print(f"Enemy path (screen positions): {path_positions}")
+
+        return path_positions
+        
+    def find_enemy_start_pos(self):
+        for row_num, row in enumerate(self.grid):
+            for column_num, space in enumerate(row):
+                if space == 3:
+                    x, y = column_num*config.GRID_CELL_SIZE, row_num*config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT 
+                    return (x, y)
+        return (0,0)
