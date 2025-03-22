@@ -17,7 +17,7 @@ class Laser(Tower):
             y_grid_pos: Y grid position of the tower on the map.
         """
         # Initialize the parent Tower class with the given grid position and specific attributes
-        super().__init__(x_grid_pos, y_grid_pos, range=5, fire_rate=10, bullet_speed=40, bullet_damage=1, cost=40)
+        super().__init__(x_grid_pos, y_grid_pos, range=4, fire_rate=5, bullet_speed=50, bullet_damage=1, cost=35)
 
         # Set the specific sprite for the Laser tower
         self.sprite = sprites.LASER_TOWER_SPRITE

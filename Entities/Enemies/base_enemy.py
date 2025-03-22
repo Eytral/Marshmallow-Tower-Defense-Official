@@ -91,7 +91,6 @@ class Enemy(ABC):
         Args:
             screen (pygame.Surface): The screen or surface to draw the enemy on.
         """
-        print(f"enemy being drawn at {self.position}")
         screen.blit(self.sprite, (self.position))  # Blit (draw) the sprite at the current position
 
     def take_damage(self, damage, **kwargs):

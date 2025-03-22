@@ -18,7 +18,7 @@ class DarkChocolate(Enemy):
             end_position (tuple): The (x, y) ending position of the enemy.
             path (list): A list of grid coordinates representing the enemy's path.
         """
-        super().__init__(start_position, path, reward=20, health=30, speed=3)
+        super().__init__(start_position, path, reward=18, health=100, speed=3)
 
         # Assigns the default sprite for Dark Chocolate
         self.sprite = sprites.DARK_CHOCOLATE_SPRITE

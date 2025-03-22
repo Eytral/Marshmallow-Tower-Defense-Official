@@ -6,7 +6,7 @@ from Entities.Towers.Laser_tower import Laser
 from Entities.Towers.Saw_tower import Saw
 from Entities.Towers.Turret_Tower import Turret
 
-from Game.game_data import ENEMY_CLASS_MAP
+from Game.game_data import ENEMY_CLASS_MAP, SPAWNING_DATA
 
 from UI.Menus.in_game_menu import GameButtons
 from UI.Menus.tower_selection_menu import TowerSelectionMenu
@@ -43,18 +43,41 @@ class Game_State(State):
         self.wave_manager = WaveManager(self.game)
 
         self.difficulty = "Normal"
-        self.health = 100 # Placeholder health value
-        self.money = 5000 # Placeholder money value
+        self.starting_money = SPAWNING_DATA[self.difficulty]["Game_Stats"]["Starting Money"]
+        self.money = self.starting_money
+        self.starting_health = SPAWNING_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
+        self.health = self.starting_health
 
     def enter(self, *args):
+        """
+        Enters the Game_state, setting the level that will be played, and calling the load level function to load such level
+
+        Args:
+            level_number: integer number representing the level that is being loaded
+        """
         if args:
             level_name = args[0]
             self.level = level_name
             self.map = Map(level_name)
-        print(f"Entering level {self.level}")
+            print(f"Entering level {self.level}")
+        self.health = self.starting_health
+        self.money = self.starting_money
+
+    def exit(self, **kwargs):
+        exiting_game = kwargs.get("exiting_game", True)
+        if exiting_game:
+            self.map.reset_map()
+            self.enemies = []
+            self.towers = {}
+            self.wave_manager.reset_waves()
+            print("Game successfully exited")
 
     def change_difficulty(self, difficulty):
         self.difficulty = difficulty
+        self.wave_manager.difficulty = difficulty
+        self.starting_health = SPAWNING_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
+        self.starting_money = SPAWNING_DATA[self.difficulty]["Game_Stats"]["Starting Money"]
+        print(f"Successfully changed difficuty to {difficulty}")
 
     def update(self, events):
         """
@@ -68,6 +91,7 @@ class Game_State(State):
         self.update_towers()   # Update tower behavior (attacking, targeting, etc.)
         self.check_bullet_collisions()  # Check and handle bullet collisions with enemies
         self.wave_manager.update()
+        self.game_over()
         self.handle_events(events)  # Process player input and other events
 
     def update_enemies(self):
@@ -94,6 +118,11 @@ class Game_State(State):
                     if pygame.Rect.colliderect(bullet.hitbox, enemy.hitbox):  # Check collision
                         enemy.take_damage(tower.bullet_damage)  # Apply damage
                         bullet.active = False  # Mark bullet as inactive after hitting an enemy
+
+    def game_over(self):
+        if self.health <= 0:
+            self.game.state_manager.change_state("Menu_State")
+            self.game.state_manager.states["Menu_State"].change_menu("GameOverMenu")
 
     def draw(self, screen):
         """

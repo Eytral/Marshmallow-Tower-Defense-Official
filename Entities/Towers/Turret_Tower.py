@@ -17,7 +17,7 @@ class Turret(Tower):
             y_grid_pos: Y grid position of the tower on the map.
         """
         # Initialize the parent Tower class with the given grid position and specific attributes
-        super().__init__(x_grid_pos, y_grid_pos, range=3, fire_rate=30, bullet_speed=15, bullet_damage=3, cost=20)
+        super().__init__(x_grid_pos, y_grid_pos, range=6, fire_rate=25, bullet_speed=20, bullet_damage=6, cost=25)
 
         # Set the specific sprite for the Turret tower
         self.sprite = sprites.TURRET_TOWER_SPRITE

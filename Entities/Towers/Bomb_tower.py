@@ -17,7 +17,7 @@ class Bomb(Tower):
             y_grid_pos: Y grid position of the tower on the map.
         """
         # Initialize the parent Tower class with the given grid position and specific attributes
-        super().__init__(x_grid_pos, y_grid_pos, range=3, fire_rate=50, bullet_speed=5, bullet_damage=10, cost=50)
+        super().__init__(x_grid_pos, y_grid_pos, range=5, fire_rate=75, bullet_speed=6, bullet_damage=10, cost=50)
 
         # Set the specific sprite for the Bomb tower
         self.sprite = sprites.BOMB_TOWER_SPRITE
