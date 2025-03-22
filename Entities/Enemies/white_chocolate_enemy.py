@@ -9,7 +9,7 @@ class WhiteChocolate(Enemy):
     When exposed to fire damage, it melts, losing its speed and changing its appearance.
     """
 
-    def __init__(self, start_position, end_position, path):
+    def __init__(self, start_position, path):
         """
         Initializes a White Chocolate enemy with specific attributes.
         
@@ -19,7 +19,7 @@ class WhiteChocolate(Enemy):
             path (list): A list of grid coordinates representing the enemy's path.
         """
         # Calls the parent class constructor to set common enemy attributes
-        super().__init__(start_position, end_position, path, reward=10, health=30, speed=5)
+        super().__init__(start_position, path, reward=10, health=30, speed=5)
 
         # Assigns the default sprite for the White Chocolate
         self.sprite = sprites.WHITE_CHOCOLATE_SPRITE

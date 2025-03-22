@@ -28,6 +28,8 @@ class Map:
         self.map_grid = Grid(copy.deepcopy(MAP_DATA[name]["grid"]))
         self.background_image = sprites.MARSH_MALLOWS_SPRITE
         self.music = MAP_DATA[name]["music"]
+        self.enemy_path = self.determine_enemy_path()
+        self.enemy_start_pos = self.determine_enemy_start_pos()
 
     def draw(self, screen, grid_x, grid_y):
         """
