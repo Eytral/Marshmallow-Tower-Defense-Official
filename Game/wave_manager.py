@@ -40,12 +40,11 @@ class WaveManager:
         random.shuffle(self.enemy_spawn_queue)
 
     def initialise_next_spawn_wave(self):
-        self.accumulated_spawns = {enemy_name: count for enemy_name, count in SPAWNING_DATA[self.difficulty]["Default_Spawn"].items()}
-
-        if self.wave_number != 1:
+        if self.wave_number > 1:
+            print(f"accumulated spawns before update is: {self.accumulated_spawns}")
             for enemy_name, increment in SPAWNING_DATA[self.difficulty]["Increment"].items():
                 self.accumulated_spawns[enemy_name] += increment
-                print(f"accumulated spawns data straight after update is: {self.accumulated_spawns}")
+            print(f"accumulated spawns data straight after update is: {self.accumulated_spawns}")
 
         spawn_wave = {enemy_name: math.floor(count) for enemy_name, count in self.accumulated_spawns.items()}
         self.create_enemy_spawn_queue(spawn_wave)
