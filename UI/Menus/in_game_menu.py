@@ -20,20 +20,25 @@ class GameButtons(Menu):
         """
         self.buttons = []  # List to store buttons for selecting towers
         self.game = game  # Game reference to interact with the game state
+        NEXT_WAVE_BUTTON_WIDTH, NEXT_WAVE_BUTTON_HEIGHT = 175, 50
+        PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT = 175, 50
 
         # Create button data with text and corresponding action
         button_data = [
             {"Text": "Next Wave", 
-             "Action": self.start_wave},
+             "Action": self.start_wave,
+             "Dimensions": (NEXT_WAVE_BUTTON_WIDTH, NEXT_WAVE_BUTTON_HEIGHT),
+             "Y_Position": config.SCREEN_HEIGHT - NEXT_WAVE_BUTTON_HEIGHT - config.SCREEN_TOPBAR_HEIGHT//4,
+             "X_Position": config.SCREEN_WIDTH - NEXT_WAVE_BUTTON_WIDTH - 20},
             {"Text": "Pause",
-             "Action": self.pause_game}
+             "Action": self.pause_game,
+             "Dimensions": (PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT),
+             "Y_Position": 20,
+             "X_Position": config.SCREEN_WIDTH - PAUSE_BUTTON_WIDTH - 20}
         ]
         
         for index, button in enumerate(button_data):
             button["ButtonType"] = "RectangleButton"
-            button["Dimensions"] = (100, 50)
-            button["Y_Position"] = config.SCREEN_TOPBAR_HEIGHT//4
-            button["X_Position"] = 220 + button["Dimensions"][0]*(config.DEFAULT_BUTTON_HORIZONTAL_OFFSET*index)
 
         # Create buttons using the provided button data
         super().__init__(game, None, button_data)  # Call the parent class's constructor

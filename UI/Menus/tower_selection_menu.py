@@ -26,6 +26,8 @@ class TowerSelectionMenu(Menu):
         self.game = game  # Game reference to interact with the game state
         self.title_font = pygame.font.Font(None, 34)  # Font for the title text
 
+        TOWER_BUTTON_WIDTH, TOWER_BUTTON_HEIGHT = 200, 60
+
         # Create button data with text and corresponding action
         button_data = []
         for tower_type in Tower.__subclasses__():
@@ -37,10 +39,15 @@ class TowerSelectionMenu(Menu):
         button_data.append({"Text": "Remove Tower",
                             "Action": self.remove_tower})  # Add remove tower button
         
+        button_data.append({"Text": "Upgrade Tower",
+                            "Action": self.upgrade_tower})  # Add remove tower button
+                            
+        
         for index, button in enumerate(button_data):
             button["ButtonType"] = "RectangleButton"
-            button["X_Position"] = config.SCREEN_WIDTH - config.SCREEN_SIDEBAR_WIDTH
-            button["Y_Position"] = (config.SCREEN_TOPBAR_HEIGHT + config.DEFAULT_BUTTON_HEIGHT//2) + (config.DEFAULT_BUTTON_HEIGHT*config.DEFAULT_BUTTON_VERTICAL_OFFSET)*index
+            button["Dimensions"] = TOWER_BUTTON_WIDTH, TOWER_BUTTON_HEIGHT
+            button["X_Position"] = config.SCREEN_WIDTH - config.SCREEN_SIDEBAR_WIDTH + 25
+            button["Y_Position"] = (config.SCREEN_TOPBAR_HEIGHT) + (button["Dimensions"][1]*config.DEFAULT_BUTTON_VERTICAL_OFFSET)*index
 
         # Create buttons using the provided button data
         super().__init__(game, None, button_data)  # Call the parent class's constructor
@@ -74,3 +81,9 @@ class TowerSelectionMenu(Menu):
         """
         self.game.state_manager.current_state.mouse.change_current_action("Removing Tower", None)
         
+    def upgrade_tower(self):
+        """
+        Allows the player to upgrade a tower.
+        """
+        # Upgrade tower logic
+
