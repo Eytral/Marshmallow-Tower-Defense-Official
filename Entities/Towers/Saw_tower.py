@@ -18,7 +18,32 @@ class Saw(Tower):
             y_grid_pos: Y grid position of the tower on the map.
         """
         # Initialize the parent Tower class with the given grid position and specific attributes
-        super().__init__(x_grid_pos, y_grid_pos, range=2, fire_rate=4, bullet_speed=80, bullet_damage=2.5, cost=30)
+        upgrade_data = {
+            "UPGRADE 1": {
+                "Range": 2,
+                "Fire Rate": 4,
+                "Bullet Speed": 80,
+                "Bullet Damage": 3,
+                "Cost": 100
+            },
+
+            "UPGRADE 2": {
+                "Range": 3,
+                "Fire Rate": 3,
+                "Bullet Speed": 80,
+                "Bullet Damage": 4,
+                "Cost": 150
+            },
+
+            "UPGRADE 3": {
+                "Range": 3,
+                "Fire Rate": 2,
+                "Bullet Speed": 80,
+                "Bullet Damage": 5,
+                "Cost": 250
+            }
+            }
+        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=2, fire_rate=5, bullet_speed=80, bullet_damage=2, cost=30)
 
         # Set the specific sprite for the Saw tower
         self.sprite = sprites.SAW_TOWER_SPRITE
@@ -32,11 +57,3 @@ class Saw(Tower):
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate
-
-    def upgrade(self):
-        """
-        Upgrade logic for the Saw tower.
-
-        This method is currently not implemented, but it is meant to handle upgrading the tower's attributes.
-        """
-        pass

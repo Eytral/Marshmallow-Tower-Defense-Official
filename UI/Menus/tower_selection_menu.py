@@ -85,5 +85,5 @@ class TowerSelectionMenu(Menu):
         """
         Allows the player to upgrade a tower.
         """
-        # Upgrade tower logic
+        self.game.state_manager.current_state.mouse.change_current_action("Upgrading Tower", None)
 

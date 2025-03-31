@@ -18,15 +18,34 @@ class Turret(Tower):
             y_grid_pos: Y grid position of the tower on the map.
         """
         # Initialize the parent Tower class with the given grid position and specific attributes
-        super().__init__(x_grid_pos, y_grid_pos, range=6, fire_rate=25, bullet_speed=20, bullet_damage=6, cost=25)
+        upgrade_data = {
+            "UPGRADE 1": {
+                "Range": 7,
+                "Fire Rate": 21,
+                "Bullet Speed": 20,
+                "Bullet Damage": 9,
+                "Cost": 100
+            },
+
+            "UPGRADE 2": {
+                "Range": 9,
+                "Fire Rate": 17,
+                "Bullet Speed": 22,
+                "Bullet Damage": 13,
+                "Cost": 150
+            },
+
+            "UPGRADE 3": {
+                "Range": 9,
+                "Fire Rate": 14,
+                "Bullet Speed": 25,
+                "Bullet Damage": 15,
+                "Cost": 250
+            }
+            }
+
+        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=6, fire_rate=25, bullet_speed=20, bullet_damage=6, cost=25)
 
         # Set the specific sprite for the Turret tower
         self.sprite = sprites.TURRET_TOWER_SPRITE
 
-    def upgrade(self):
-        """
-        Upgrade logic for the Turret tower.
-
-        This method is currently not implemented, but it is meant to handle upgrading the tower's attributes.
-        """
-        pass

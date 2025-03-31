@@ -7,7 +7,7 @@ class Tower(ABC):
     Base class for creating towers in the game. This class handles basic tower mechanics such as shooting, 
     targeting, range checking, and bullet creation. It also includes attributes related to tower stats.
     """
-    def __init__(self, x_grid_pos, y_grid_pos, range=5, fire_rate=30, bullet_speed=10, bullet_damage=2, cost=10):
+    def __init__(self, x_grid_pos, y_grid_pos, upgrade_data=None, range=5, fire_rate=30, bullet_speed=10, bullet_damage=2, cost=10):
         """
         Initializes a Tower instance with the given attributes.
         
@@ -42,6 +42,10 @@ class Tower(ABC):
         self.bullets = []  # List to store the bullets fired by the tower
 
         self.cost = cost  # Cost to place the tower
+
+        self.upgrade_level = 0
+        if upgrade_data != None:
+            self.upgrade_data = upgrade_data
 
     def draw(self, screen):
         """
@@ -121,9 +125,24 @@ class Tower(ABC):
         for bullet in self.bullets:
             bullet.update()
 
-    @abstractmethod
-    def upgrade(self):
+    def upgrade(self, money):
         """
         An abstract method for upgrading the tower. This method should be implemented by any subclass.
+
+        Args:
+            money: Amount of money the player has when attempting upgrade
         """
-        pass
+        if self.upgrade_level < len(self.upgrade_data):
+            if money >= self.upgrade_data[f"UPGRADE {self.upgrade_level+1}"]["Cost"]:
+                self.upgrade_level += 1
+                self.range = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Range"]
+                self.fire_rate = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Fire Rate"]
+                self.bullet_speed = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Bullet Speed"]
+                self.bullet_damage = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Bullet Damage"]
+                print(f"Tower {self} has been successfuly upgraded")
+                return self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
+            else:
+                print("Upgrade failed: Not enough money")
+        else:
+            print("Upgrade Failed: Max Level Already!")
+

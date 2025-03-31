@@ -18,7 +18,32 @@ class Laser(Tower):
             y_grid_pos: Y grid position of the tower on the map.
         """
         # Initialize the parent Tower class with the given grid position and specific attributes
-        super().__init__(x_grid_pos, y_grid_pos, range=4, fire_rate=5, bullet_speed=50, bullet_damage=1, cost=35)
+        upgrade_data = {
+            "UPGRADE 1": {
+                "Range": 4,
+                "Fire Rate": 4,
+                "Bullet Speed": 45,
+                "Bullet Damage": 1.5,
+                "Cost": 100
+            },
+
+            "UPGRADE 2": {
+                "Range": 4,
+                "Fire Rate": 3,
+                "Bullet Speed": 50,
+                "Bullet Damage": 2,
+                "Cost": 150
+            },
+
+            "UPGRADE 3": {
+                "Range": 5,
+                "Fire Rate": 2,
+                "Bullet Speed": 50,
+                "Bullet Damage": 3,
+                "Cost": 250
+            }
+            }
+        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=4, fire_rate=5, bullet_speed=40, bullet_damage=1, cost=35)
 
         # Set the specific sprite for the Laser tower
         self.sprite = sprites.LASER_TOWER_SPRITE
@@ -32,11 +57,3 @@ class Laser(Tower):
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate
-
-    def upgrade(self):
-        """
-        Upgrade logic for the Laser tower.
-
-        This method is currently not implemented, but it is meant to handle upgrading the tower's attributes.
-        """
-        pass

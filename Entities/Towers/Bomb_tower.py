@@ -18,7 +18,33 @@ class Bomb(Tower):
             y_grid_pos: Y grid position of the tower on the map.
         """
         # Initialize the parent Tower class with the given grid position and specific attributes
-        super().__init__(x_grid_pos, y_grid_pos, range=5, fire_rate=75, bullet_speed=6, bullet_damage=10, cost=50)
+        upgrade_data = {
+            "UPGRADE 1": {
+                "Range": 5,
+                "Fire Rate": 60,
+                "Bullet Speed": 6,
+                "Bullet Damage": 13,
+                "Cost": 100
+            },
+
+            "UPGRADE 2": {
+                "Range": 6,
+                "Fire Rate": 50,
+                "Bullet Speed": 7,
+                "Bullet Damage": 19,
+                "Cost": 150
+            },
+
+            "UPGRADE 3": {
+                "Range": 7,
+                "Fire Rate": 40,
+                "Bullet Speed": 9,
+                "Bullet Damage": 26,
+                "Cost": 250
+            }
+            }
+
+        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=3, fire_rate=75, bullet_speed=6, bullet_damage=8, cost=50)
 
         # Set the specific sprite for the Bomb tower
         self.sprite = sprites.BOMB_TOWER_SPRITE
@@ -32,11 +58,3 @@ class Bomb(Tower):
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate
-
-    def upgrade(self):
-        """
-        Upgrade logic for the Bomb tower.
-
-        This method is currently not implemented, but it is meant to handle upgrading the tower's attributes.
-        """
-        pass

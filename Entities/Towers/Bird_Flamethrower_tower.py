@@ -18,10 +18,36 @@ class BirdFlamethrower(Tower):
             y_grid_pos: Y grid position of the tower on the map.
         """
         # Initialize the parent Tower class with the given grid position and specific attributes
-        super().__init__(x_grid_pos, y_grid_pos, range=3, fire_rate=8, bullet_speed=18, bullet_damage=5, cost=45)
+        upgrade_data = {
+            "UPGRADE 1": {
+                "Range": 3,
+                "Fire Rate": 13,
+                "Bullet Speed": 14,
+                "Bullet Damage": 7,
+                "Cost": 100
+            },
+
+            "UPGRADE 2": {
+                "Range": 4,
+                "Fire Rate": 10,
+                "Bullet Speed": 18,
+                "Bullet Damage": 10,
+                "Cost": 150
+            },
+
+            "UPGRADE 3": {
+                "Range": 5,
+                "Fire Rate": 6,
+                "Bullet Speed": 20,
+                "Bullet Damage": 15,
+                "Cost": 250
+            }
+        }
+        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=3, fire_rate=15, bullet_speed=10, bullet_damage=5, cost=45)
         
         # Set the specific sprite for the BirdFlamethrower tower
         self.sprite = sprites.BIRDFLAMETHROWER_TOWER_SPRITE
+        
 
     def shoot(self):
         """
@@ -33,33 +59,3 @@ class BirdFlamethrower(Tower):
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate
 
-
-    def upgrade(self):
-        """
-        Upgrade logic for the BirdFlamethrower tower.
-        """
-        {
-        "UPGRADE 1": {
-            "Range": 3,
-            "Fire Rate": 7,
-            "Bullet Speed": 18,
-            "Bullet Damage": 5,
-            "Cost": 100
-        },
-
-        "UPGRADE 2": {
-            "Range": 4,
-            "Fire Rate": 6,
-            "Bullet Speed": 18,
-            "Bullet Damage": 10,
-            "Cost": 150
-        },
-
-        "UPGRADE 3": {
-            "Range": 5,
-            "Fire Rate": 5,
-            "Bullet Speed": 18,
-            "Bullet Damage": 15,
-            "Cost": 250
-        }
-        }

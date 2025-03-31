@@ -172,6 +172,9 @@ class Game_State(State):
                 if self.mouse.current_action == "Placing Tower":
                     self.place_tower()
 
+                if self.mouse.current_action == "Upgrading Tower":
+                    self.upgrade_tower()
+
                 if self.mouse.current_action == "Removing Tower":
                     self.remove_tower()
             
@@ -196,6 +199,15 @@ class Game_State(State):
             del self.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)] # Delete selected tower object (at selected map coordinate)
             print(f"successfully deleted tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
             self.mouse.change_current_action(None, None) # Reset mouse action and selection
+
+    def upgrade_tower(self):
+        if (self.mouse.map_grid_x, self.mouse.map_grid_y) in self.towers:
+            result = self.towers[self.mouse.map_grid_x, self.mouse.map_grid_y].upgrade(self.money)
+            if result != None:
+                self.money -= result
+                    
+
+
 
     def create_enemy(self, enemy_name):
         print(f"created enemy {enemy_name}")

@@ -1,7 +1,7 @@
 SPAWNING_DATA = {
     "Easy": {
         "Game_Stats": {
-            "Starting Money": 75,
+            "Starting Money": 725,
             "Starting Health": 120
         },
         "Default_Spawn": {
@@ -22,7 +22,7 @@ SPAWNING_DATA = {
 
     "Normal": {
         "Game_Stats": {
-            "Starting Money": 40,
+            "Starting Money": 50,
             "Starting Health": 80
         },
         "Default_Spawn": {
@@ -43,7 +43,7 @@ SPAWNING_DATA = {
 
     "Hard": {
         "Game_Stats": {
-            "Starting Money": 15,
+            "Starting Money": 30,
             "Starting Health": 40
         },
         "Default_Spawn": {
