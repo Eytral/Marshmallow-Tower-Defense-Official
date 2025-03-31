@@ -1,5 +1,6 @@
 from Constants import sprites
 from Entities.Towers.base_tower import Tower
+from Entities.bullet import Bullet
 
 class Bomb(Tower):
     """
@@ -21,6 +22,16 @@ class Bomb(Tower):
 
         # Set the specific sprite for the Bomb tower
         self.sprite = sprites.BOMB_TOWER_SPRITE
+
+    def shoot(self):
+        """
+        Fires a bullet towards the target.
+        """
+        # Create a bullet and add it to the list of bullets
+        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Bomb", bullet_sprite=sprites.BOMB_SPRITE))
+
+        # Reset the cooldown to the fire rate
+        self.shoot_cooldown = self.fire_rate
 
     def upgrade(self):
         """

@@ -25,17 +25,17 @@ class Cracker(Enemy):
         self.sprite = sprites.CRACKER_SPRITE
         
         # Unimplemented sprite for when cracker "breaks":
-        # self.broken_sprite = sprites.BROKEN_CRACKER_SPRITE  
+        self.broken_sprite = sprites.BROKEN_CRACKER_SPRITE  
+        self.broken = False
 
     def become_broken(self):
         """
         When the Cracker's health drops below 20%, it moves faster.
         """
-        if self.health <= self.health // 5:  # 20% of original health
-            self.speed = 2  # Increase speed after breaking
-            
-            # Uncomment below if you want a sprite change when broken
-            # self.sprite = self.broken_sprite  
+        # 20% of original health
+        self.speed = 2  # Increase speed after breaking
+        self.broken = True
+        self.sprite = self.broken_sprite  
 
     def take_damage(self, damage, **kwargs):
         """
@@ -51,6 +51,14 @@ class Cracker(Enemy):
             damage_type = kwargs['damage_type']
             if damage_type == "Fire":
                 damage = 0  # Negate fire damage
+            if damage_type == "Bomb":
+                if not self.broken:
+                    self.become_broken()
+        if self.health <= self.max_health // 2:  # 50% of original health
+            if not self.broken:
+                self.become_broken()
+        if self.broken:
+            damage *= 2
         
         # Apply the modified damage amount using the parent class method
         super().take_damage(damage)

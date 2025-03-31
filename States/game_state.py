@@ -25,7 +25,7 @@ class Game_State(State):
             game: Reference to the main game object, allowing access to shared resources.
         """
         super().__init__(game)  # Call the parent State class constructor
-        
+
         # Initialize game map
         self.map = Map("Demonstration_Map")  # Stub/demonstration map
         
@@ -35,10 +35,10 @@ class Game_State(State):
         # List to store active enemies
         self.enemies = []
 
+        self.mouse = Mouse()
+
         self.gamebuttons = GameButtons(self.game)
         self.tower_selection_menu = TowerSelectionMenu(self.game)
-
-        self.mouse = Mouse()
 
         self.wave_manager = WaveManager(self.game)
 
@@ -60,6 +60,7 @@ class Game_State(State):
             self.level = level_name
             self.map = Map(level_name)
             print(f"Entering level {self.level}")
+        self.wave_manager.reset_waves()
         self.health = self.starting_health
         self.money = self.starting_money
 
@@ -69,7 +70,6 @@ class Game_State(State):
             self.map.reset_map()
             self.enemies = []
             self.towers = {}
-            self.wave_manager.reset_waves()
             print("Game successfully exited")
 
     def change_difficulty(self, difficulty):
@@ -86,6 +86,10 @@ class Game_State(State):
         Args:
             events: A list of input events (e.g., keyboard/mouse actions).
         """
+        for button in self.tower_selection_menu.buttons:
+            if button.is_hovered():
+                self.mouse.currently_hovering = button.text
+            
         self.mouse.update_mouse_pos()
         self.update_enemies()  # Update enemy positions and check for removals
         self.update_towers()   # Update tower behavior (attacking, targeting, etc.)
@@ -116,7 +120,7 @@ class Game_State(State):
             for bullet in tower.bullets:
                 for enemy in self.enemies:
                     if pygame.Rect.colliderect(bullet.hitbox, enemy.hitbox):  # Check collision
-                        enemy.take_damage(tower.bullet_damage)  # Apply damage
+                        enemy.take_damage(tower.bullet_damage, damage_type=bullet.type)  # Apply damage
                         bullet.active = False  # Mark bullet as inactive after hitting an enemy
 
     def game_over(self):
@@ -170,6 +174,7 @@ class Game_State(State):
 
                 if self.mouse.current_action == "Removing Tower":
                     self.remove_tower()
+            
 
     def place_tower(self):
         """

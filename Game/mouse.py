@@ -22,6 +22,7 @@ class Mouse():
         self.map_grid_y = None  # Y position on the grid (None means no position yet)
         self.current_selection = None  # The object or tower selected (None means no selection)
         self.current_action = None  # The action being performed (None means no action)
+        self.currently_hovering = None # The location/object being hovered (None means no object is hovered over)
 
     def update_mouse_pos(self):
         """

@@ -8,7 +8,7 @@ class Bullet:
     Handles the bullet's movement, rendering, and interaction with targets.
     """
     
-    def __init__(self, x_pos, y_pos, target, speed=5, damage=1):
+    def __init__(self, x_pos, y_pos, target, speed=5, damage=1, bullet_type="Default", width=config.GRID_CELL_SIZE//5, height=config.GRID_CELL_SIZE//5, bullet_sprite=sprites.BULLET_SPRITE):
         """
         Initializes the bullet with its properties.
 
@@ -22,15 +22,16 @@ class Bullet:
         self.target = target  # Target the bullet will follow
         self.speed = speed  # Speed at which the bullet moves
         self.damage = damage  # Amount of damage the bullet inflicts
+        self.type = bullet_type # Type of Bullet
 
-        self.sprite = sprites.BULLET_SPRITE  # Bullet's visual representation (sprite)
+        self.sprite = bullet_sprite  # Bullet's visual representation (sprite)
 
         self.x_pos = x_pos  # Initial x-position of the bullet
         self.y_pos = y_pos  # Initial y-position of the bullet
 
         self.active = True  # Tracks whether the bullet is still active. If False, the bullet is removed.
 
-        self.width, self.height = config.GRID_CELL_SIZE//5, config.GRID_CELL_SIZE//5  # Bullet's dimensions (scaled down from grid size)
+        self.width, self.height = width, height  # Bullet's dimensions (scaled down from grid size)
 
         # Predict where the enemy will be
         self.target_x, self.target_y = self.predict_enemy_position()

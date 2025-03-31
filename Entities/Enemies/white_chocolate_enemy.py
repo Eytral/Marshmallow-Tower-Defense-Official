@@ -25,7 +25,7 @@ class WhiteChocolate(Enemy):
         self.sprite = sprites.WHITE_CHOCOLATE_SPRITE
         
         # Unimplemented sprite for when chocolate "melts":
-        # self.melted_sprite = sprites.WHITE_CHOCOLATE_MELTED_SPRITE  
+        self.melted_sprite = sprites.MELTED_WHITE_CHOCOLATE_SPRITE  
 
     def take_damage(self, damage, **kwargs):
         """
@@ -56,5 +56,4 @@ class WhiteChocolate(Enemy):
         """
         self.speed = 2  # Reduce speed after melting
         
-        # Uncomment below if you want a sprite change when melted
-        # self.sprite = self.melted_sprite  
+        self.sprite = self.melted_sprite  

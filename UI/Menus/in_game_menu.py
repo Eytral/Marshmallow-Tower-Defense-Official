@@ -42,7 +42,7 @@ class GameButtons(Menu):
 
         # Create buttons using the provided button data
         super().__init__(game, None, button_data)  # Call the parent class's constructor
-        self.body_font = pygame.font.Font(None, 20)
+        self.body_font = pygame.font.Font(None, 50)
 
     def draw(self, screen):
         """
@@ -56,14 +56,18 @@ class GameButtons(Menu):
         
         health_surface = self.body_font.render(f"Health: {self.game.state_manager.states["Game_State"].health}", True, (255, 255, 255))  # White color for title text
         text_rect = health_surface.get_rect()  # Get the rect of the title text for positioning
-        text_rect.center = (50, config.SCREEN_TOPBAR_HEIGHT//4)  # Position the title at the center horizontally and near the top
+        text_rect.center = (100, config.SCREEN_TOPBAR_HEIGHT//2)  # Position the title at the center horizontally and near the top
         screen.blit(health_surface, text_rect)  # Draw the title on the screen
 
         money_surface = self.body_font.render(f"Money: {self.game.state_manager.states["Game_State"].money}", True, (255, 255, 255))  # White color for title text
         text_rect = money_surface.get_rect()  # Get the rect of the title text for positioning
-        text_rect.center = (50, config.SCREEN_TOPBAR_HEIGHT//4*2)  # Position the title at the center horizontally and near the top
+        text_rect.center = (300, config.SCREEN_TOPBAR_HEIGHT//2)  # Position the title at the center horizontally and near the top
         screen.blit(money_surface, text_rect)  # Draw the title on the screen
         
+        wave_surface = self.body_font.render(f"Wave: {self.game.state_manager.states["Game_State"].wave_manager.wave_number}", True, (255, 255, 255))  # White color for title text
+        text_rect = wave_surface.get_rect()  # Get the rect of the title text for positioning
+        text_rect.center = (500, config.SCREEN_TOPBAR_HEIGHT//2)  # Position the title at the center horizontally and near the top
+        screen.blit(wave_surface, text_rect)  # Draw the title on the screen
 
     def start_wave(self):
         """

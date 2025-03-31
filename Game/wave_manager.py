@@ -96,8 +96,9 @@ class WaveManager:
         """
         Resets all wave-related parameters, typically used when restarting the game.
         """
-        self.wave_number = 1  # Reset wave number to the first wave
+        self.wave_number = 0  # Reset wave number to the first wave
         self.spawn_cooldown = 0  # Reset the cooldown for enemy spawning
         self.wave_ongoing = False  # Mark the wave as inactive
+        print(f"difficulty:{self.difficulty}")
         self.accumulated_spawns = {enemy_name: count for enemy_name, count in SPAWNING_DATA[self.difficulty]["Default_Spawn"].items()} # Reset Spawn Counter
         self.enemy_spawn_queue = [] # Clear Spawn Queue

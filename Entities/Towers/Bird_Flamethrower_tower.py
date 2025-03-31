@@ -1,5 +1,6 @@
 from Constants import sprites
 from Entities.Towers.base_tower import Tower
+from Entities.bullet import Bullet
 
 class BirdFlamethrower(Tower):
     """
@@ -21,11 +22,44 @@ class BirdFlamethrower(Tower):
         
         # Set the specific sprite for the BirdFlamethrower tower
         self.sprite = sprites.BIRDFLAMETHROWER_TOWER_SPRITE
-    
+
+    def shoot(self):
+        """
+        Fires a bullet towards the target.
+        """
+        # Create a bullet and add it to the list of bullets
+        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Fire", bullet_sprite=sprites.FIREBALL_SPRITE))
+
+        # Reset the cooldown to the fire rate
+        self.shoot_cooldown = self.fire_rate
+
+
     def upgrade(self):
         """
         Upgrade logic for the BirdFlamethrower tower.
-        
-        This method is currently not implemented, but it is meant to handle upgrading the tower's attributes.
         """
-        pass
+        {
+        "UPGRADE 1": {
+            "Range": 3,
+            "Fire Rate": 7,
+            "Bullet Speed": 18,
+            "Bullet Damage": 5,
+            "Cost": 100
+        },
+
+        "UPGRADE 2": {
+            "Range": 4,
+            "Fire Rate": 6,
+            "Bullet Speed": 18,
+            "Bullet Damage": 10,
+            "Cost": 150
+        },
+
+        "UPGRADE 3": {
+            "Range": 5,
+            "Fire Rate": 5,
+            "Bullet Speed": 18,
+            "Bullet Damage": 15,
+            "Cost": 250
+        }
+        }

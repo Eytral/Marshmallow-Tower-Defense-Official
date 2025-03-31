@@ -24,7 +24,7 @@ class DarkChocolate(Enemy):
         self.sprite = sprites.DARK_CHOCOLATE_SPRITE
         
         # Unimplemented sprite for when chocolate "melts":
-        # self.melted_sprite = sprites.DARK_CHOCOLATE_MELTED_SPRITE  
+        self.melted_sprite = sprites.MELTED_DARK_CHOCOLATE_SPRITE
 
         # Armor reduces incoming damage (damage is divided by armor value)
         self.armour = 5  
@@ -64,6 +64,5 @@ class DarkChocolate(Enemy):
         """
         self.speed = 1  # Reduce speed after melting
         self.armour = 0  # Remove armor protection
-        
-        # Uncomment below if you want a sprite change when melted
-        # self.sprite = self.melted_sprite  
+
+        self.sprite = self.melted_sprite  
