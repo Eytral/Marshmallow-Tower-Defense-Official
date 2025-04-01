@@ -59,7 +59,7 @@ class StateManager:
         if self.current_state:
             self.current_state.update(events)  # Call the state's update method
 
-    def draw(self, screen):
+    def draw(self, screen, *args):
         """
         Draws the current state to the screen.
 
@@ -68,6 +68,7 @@ class StateManager:
         """
         if self.current_state:
             self.current_state.draw(screen)  # Call the state's draw method
+            self.current_state.display_debug_info(screen, *args)
 
     def get_current_state(self):
         """Returns the name of the current state, or None if no state is active."""

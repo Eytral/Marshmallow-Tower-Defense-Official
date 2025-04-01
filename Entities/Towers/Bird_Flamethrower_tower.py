@@ -24,7 +24,8 @@ class BirdFlamethrower(Tower):
                 "Fire Rate": 13,
                 "Bullet Speed": 14,
                 "Bullet Damage": 7,
-                "Cost": 100
+                "Cost": 100,
+                "Splash Radius": 0
             },
 
             "UPGRADE 2": {
@@ -32,7 +33,8 @@ class BirdFlamethrower(Tower):
                 "Fire Rate": 10,
                 "Bullet Speed": 18,
                 "Bullet Damage": 10,
-                "Cost": 150
+                "Cost": 150,
+                "Splash Radius": 1
             },
 
             "UPGRADE 3": {
@@ -40,7 +42,8 @@ class BirdFlamethrower(Tower):
                 "Fire Rate": 6,
                 "Bullet Speed": 20,
                 "Bullet Damage": 15,
-                "Cost": 250
+                "Cost": 250,
+                "Splash Radius": 2
             }
         }
         super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=3, fire_rate=15, bullet_speed=10, bullet_damage=5, cost=45)
@@ -54,7 +57,7 @@ class BirdFlamethrower(Tower):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Fire", bullet_sprite=sprites.FIREBALL_SPRITE))
+        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Fire", tile_splash_radius=self.tile_splash_radius, bullet_sprite=sprites.FIREBALL_SPRITE))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate

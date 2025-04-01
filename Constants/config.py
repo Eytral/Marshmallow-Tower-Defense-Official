@@ -6,7 +6,7 @@ FPS = 60 # Game FPS
 GRID_CELL_COUNT = 10 # Grid cell number
 GRID_CELL_SIZE = 64 # Cell size
 GRID_SIZE = GRID_CELL_SIZE * GRID_CELL_COUNT # Size of entire grid (cell number = 10)
-OFFSET_FROM_GRID = 3 # Offset size (from grid border)
+OFFSET_FROM_GRID = 1 # Offset size (from grid border)
 
 # Screen offset bars
 SCREEN_TOPBAR_HEIGHT = 80 # Height of topbar (for game buttons)

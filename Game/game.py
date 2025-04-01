@@ -20,6 +20,7 @@ class Game():
 
         self.clock = pygame.time.Clock()  # Create a clock to manage frame rate
         self.running = True  # Controls the game loop execution
+        self.debug = True
         
         # Initialize the state manager and add different game states
         self.state_manager = StateManager() 
@@ -52,7 +53,7 @@ class Game():
             self.screen.fill((0, 0, 0))
 
             # Draw the current state on the screen
-            self.state_manager.draw(self.screen)
+            self.state_manager.draw(self.screen, self.clock.get_fps())
 
             # Refresh the display
             pygame.display.flip()

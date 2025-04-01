@@ -23,28 +23,31 @@ class Bomb(Tower):
                 "Range": 5,
                 "Fire Rate": 60,
                 "Bullet Speed": 6,
-                "Bullet Damage": 13,
-                "Cost": 100
+                "Bullet Damage": 15,
+                "Cost": 100,
+                "Splash Radius": 1
             },
 
             "UPGRADE 2": {
                 "Range": 6,
                 "Fire Rate": 50,
                 "Bullet Speed": 7,
-                "Bullet Damage": 19,
-                "Cost": 150
+                "Bullet Damage": 20,
+                "Cost": 150,
+                "Splash Radius": 2
             },
 
             "UPGRADE 3": {
                 "Range": 7,
                 "Fire Rate": 40,
                 "Bullet Speed": 9,
-                "Bullet Damage": 26,
-                "Cost": 250
+                "Bullet Damage": 30,
+                "Cost": 250,
+                "Splash Radius": 3
             }
             }
 
-        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=3, fire_rate=75, bullet_speed=6, bullet_damage=8, cost=50)
+        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=3, tile_splash_radius= 1, fire_rate=75, bullet_speed=6, bullet_damage=10, cost=50)
 
         # Set the specific sprite for the Bomb tower
         self.sprite = sprites.BOMB_TOWER_SPRITE
@@ -54,7 +57,7 @@ class Bomb(Tower):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Bomb", bullet_sprite=sprites.BOMB_SPRITE))
+        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Bomb", tile_splash_radius=self.tile_splash_radius, bullet_sprite=sprites.BOMB_SPRITE))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate

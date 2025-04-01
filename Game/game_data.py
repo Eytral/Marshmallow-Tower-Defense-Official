@@ -1,7 +1,7 @@
 SPAWNING_DATA = {
     "Easy": {
         "Game_Stats": {
-            "Starting Money": 725,
+            "Starting Money": 75,
             "Starting Health": 120
         },
         "Default_Spawn": {
@@ -17,12 +17,13 @@ SPAWNING_DATA = {
             "white_chocolate enemy": 0.2,
             "dark_chocolate enemy": 0.05,
             "smore enemy": 0.05
-        }
+        },
+        "Default_Spawn_Interval": 60
     },
 
     "Normal": {
         "Game_Stats": {
-            "Starting Money": 50,
+            "Starting Money": 75,
             "Starting Health": 80
         },
         "Default_Spawn": {
@@ -38,12 +39,13 @@ SPAWNING_DATA = {
             "white_chocolate enemy": 0.6,
             "dark_chocolate enemy": 0.2,
             "smore enemy": 0.1
-        }
+        },
+        "Default_Spawn_Interval": 50
     },
 
     "Hard": {
         "Game_Stats": {
-            "Starting Money": 30,
+            "Starting Money": 75,
             "Starting Health": 40
         },
         "Default_Spawn": {
@@ -59,7 +61,8 @@ SPAWNING_DATA = {
             "white_chocolate enemy": 1.2,
             "dark_chocolate enemy": 0.4,
             "smore enemy": 0.3
-        }
+        },
+        "Default_Spawn_Interval": 40
     }
 }
 

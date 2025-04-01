@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import pygame
 class State(ABC):
 
     """
@@ -10,6 +11,7 @@ class State(ABC):
 
     def __init__(self, game):
         self.game = game
+        self.debug_font = pygame.font.Font(None, 25)
 
     @abstractmethod
     def update(self, events):
@@ -48,3 +50,10 @@ class State(ABC):
     def exit(self, *args, **kwargs):
         """Called when the state is exited"""
         pass
+
+    def display_debug_info(self, screen, *args):
+        fps = args[0]
+        if fps:
+            fps_text = self.debug_font.render(f"fps: {fps}", True, (255, 255, 255))
+            screen.blit(fps_text, (0, 0))
+    

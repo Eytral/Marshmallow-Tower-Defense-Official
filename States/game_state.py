@@ -5,6 +5,7 @@ from Entities.Towers.Bomb_tower import Bomb
 from Entities.Towers.Laser_tower import Laser
 from Entities.Towers.Saw_tower import Saw
 from Entities.Towers.Turret_Tower import Turret
+from Constants import config
 
 from Game.game_data import ENEMY_CLASS_MAP, SPAWNING_DATA
 
@@ -47,6 +48,11 @@ class Game_State(State):
         self.money = self.starting_money
         self.starting_health = SPAWNING_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
         self.health = self.starting_health
+
+        self.total_error_message_display_time = 100
+        self.error_message_display_time = 0
+        self.error_font = pygame.font.Font(None, 50)
+        self.error_message = None
 
     def enter(self, *args):
         """
@@ -120,7 +126,14 @@ class Game_State(State):
             for bullet in tower.bullets:
                 for enemy in self.enemies:
                     if pygame.Rect.colliderect(bullet.hitbox, enemy.hitbox):  # Check collision
-                        enemy.take_damage(tower.bullet_damage, damage_type=bullet.type)  # Apply damage
+                        if bullet.tile_splash_radius > 0:
+                            for enemy in self.enemies:
+                                splash_radius = bullet.tile_splash_radius * config.GRID_CELL_SIZE
+                                if enemy.position[0]-bullet.x_pos <= splash_radius or enemy.position[1]-bullet.y_pos <= splash_radius:
+                                    enemy.take_damage(tower.bullet_damage, damage_type=bullet.type)
+                        else:
+                            enemy.take_damage(tower.bullet_damage, damage_type=bullet.type)
+                                
                         bullet.active = False  # Mark bullet as inactive after hitting an enemy
 
     def game_over(self):
@@ -138,9 +151,15 @@ class Game_State(State):
         self.map.draw(screen, self.mouse.map_grid_x, self.mouse.map_grid_y)  # Draw the game map
         self.draw_towers(screen)  # Draw all towers
         self.draw_enemies(screen)  # Draw all enemies
+        self.highlight_selected_tower(screen) # Draw Highlight for selection AFTER drawing tower for clarity
         self.gamebuttons.draw(screen)
         self.tower_selection_menu.draw(screen)
+        self.draw_error_message(screen)
 
+    def highlight_selected_tower(self, screen):
+        if self.mouse.current_action == "Selected Tower":
+            grid_x, grid_y = self.mouse.current_selection.x_grid_pos, self.mouse.current_selection.y_grid_pos
+            self.map.map_grid.highlight_square(screen, grid_x, grid_y, colour=(0, 255, 255))
 
     def draw_towers(self, screen):
         """Draw all towers on the screen."""
@@ -151,6 +170,17 @@ class Game_State(State):
         """Draw all enemies on the screen."""
         for enemy in self.enemies:
             enemy.draw(screen)
+
+    def draw_error_message(self, screen):
+        if self.error_message_display_time > 0:
+            if self.error_message != None:
+                message_text = self.error_font.render(f"Error: {self.error_message}", True, (255, 0, 0))
+                screen.blit(message_text, (0, (config.GRID_SIZE + config.SCREEN_TOPBAR_HEIGHT)//2))
+                self.error_message_display_time -= 1
+        else:
+            self.error_message = None
+            self.error_message_display_time = self.total_error_message_display_time
+
 
     def handle_events(self, events):
         """
@@ -172,12 +202,8 @@ class Game_State(State):
                 if self.mouse.current_action == "Placing Tower":
                     self.place_tower()
 
-                if self.mouse.current_action == "Upgrading Tower":
-                    self.upgrade_tower()
-
-                if self.mouse.current_action == "Removing Tower":
-                    self.remove_tower()
-            
+                else:
+                    self.select_tile()
 
     def place_tower(self):
         """
@@ -189,25 +215,32 @@ class Game_State(State):
                 self.money -= self.mouse.current_selection(0,0).cost # Removes the cost of the tower from money
                 print(f"successfully placed tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
                 self.mouse.change_current_action(None, None) # Reset mouse action and selection
-
+        else:
+            self.error_message = "Not enough money to place tower"
 
     def remove_tower(self): # If able to remove tower
         """
         Removes a tower on the map grid and removes the selected tower from the game_state tower dict
         """
-        if self.map.remove_tower(self.mouse.map_grid_x, self.mouse.map_grid_y):
-            del self.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)] # Delete selected tower object (at selected map coordinate)
-            print(f"successfully deleted tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
-            self.mouse.change_current_action(None, None) # Reset mouse action and selection
+        self.map.remove_tower(self.mouse.current_selection.x_grid_pos, self.mouse.current_selection.y_grid_pos)
+        del self.towers[(self.mouse.current_selection.x_grid_pos, self.mouse.current_selection.y_grid_pos)] # Delete selected tower object (at selected map coordinate)
+        print(f"successfully deleted tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
+        self.mouse.change_current_action(None, None) # Reset mouse action and selection
 
     def upgrade_tower(self):
+        result = self.mouse.current_selection.upgrade(self.money)
+        if result[0]:
+            self.money -= result[1]
+        else:
+            self.error_message = result[1]
+                
+    def select_tile(self):
         if (self.mouse.map_grid_x, self.mouse.map_grid_y) in self.towers:
-            result = self.towers[self.mouse.map_grid_x, self.mouse.map_grid_y].upgrade(self.money)
-            if result != None:
-                self.money -= result
-                    
-
-
+            self.mouse.change_current_action("Selected Tower", self.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)])
+            print(f"successfully selected tower {self.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)]}")
+        else:
+            self.mouse.change_current_action(None, None)
+            print(f"successfully unselected")
 
     def create_enemy(self, enemy_name):
         print(f"created enemy {enemy_name}")

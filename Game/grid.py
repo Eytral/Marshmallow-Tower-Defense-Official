@@ -94,6 +94,8 @@ class Grid:
                                    config.GRID_CELL_SIZE - config.OFFSET_FROM_GRID * 2)
                 
                 # Draw tiles based on their type using color codes
+                if cell == 0:
+                    pygame.draw.rect(screen, (0, 155, 0), rect)  # Dark Green for empty tiles
                 if cell == 1:
                     pygame.draw.rect(screen, (255, 165, 0), rect)  # Orange for path tiles
                 if cell == 3:
@@ -105,7 +107,7 @@ class Grid:
         border_rect = pygame.Rect(0, config.SCREEN_TOPBAR_HEIGHT, config.GRID_SIZE, config.GRID_SIZE)
         pygame.draw.rect(screen, (0, 0, 255), border_rect, 1)  # Blue border with thickness of 1
 
-    def highlight_square(self, screen, grid_x, grid_y):
+    def highlight_square(self, screen, grid_x, grid_y, colour=(255, 0, 0)):
         """
         Highlights the selected grid square.
         
@@ -115,7 +117,7 @@ class Grid:
             grid_y: Y-coordinate of the grid cell.
         """
         if grid_x is not None and grid_y is not None:
-            pygame.draw.rect(screen, (255, 0, 0), (grid_x * config.GRID_CELL_SIZE, grid_y * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT, config.GRID_CELL_SIZE, config.GRID_CELL_SIZE), 3)  # Red highlight
+            pygame.draw.rect(screen, colour, (grid_x * config.GRID_CELL_SIZE, grid_y * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT, config.GRID_CELL_SIZE, config.GRID_CELL_SIZE), 3)  # Red highlight
 
 
 

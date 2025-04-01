@@ -79,11 +79,13 @@ class TowerSelectionMenu(Menu):
         """
         Allows the player to remove a tower.
         """
-        self.game.state_manager.current_state.mouse.change_current_action("Removing Tower", None)
+        if self.game.state_manager.current_state.mouse.current_action == "Selected Tower":
+            self.game.state_manager.current_state.remove_tower()
         
     def upgrade_tower(self):
         """
         Allows the player to upgrade a tower.
         """
-        self.game.state_manager.current_state.mouse.change_current_action("Upgrading Tower", None)
+        if self.game.state_manager.current_state.mouse.current_action == "Selected Tower":
+            self.game.state_manager.current_state.upgrade_tower()
 

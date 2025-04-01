@@ -23,12 +23,13 @@ class WaveManager:
             initial_wave_count: Number of enemies in the first wave.
             wave_enemy_spawn_increase: Additional enemies added per wave.
         """
+        self.difficulty = "Normal"
         self.wave_number = 0  # Tracks the current wave number
-        self.spawn_interval = 50  # Time between enemy spawns (in frames/ticks)
+        self.spawn_interval = SPAWNING_DATA[self.difficulty]["Default_Spawn_Interval"]  # Time between enemy spawns (in frames/ticks)
         self.spawn_cooldown = 0  # Countdown timer for enemy spawning
         self.wave_ongoing = False  # Flag indicating whether a wave is currently active
         self.game = game  # Stores reference to the game instance
-        self.difficulty = "Normal"
+
 
         self.accumulated_spawns = {enemy_name: count for enemy_name, count in SPAWNING_DATA[self.difficulty]["Default_Spawn"].items()}
         self.enemy_spawn_queue = []
@@ -81,6 +82,8 @@ class WaveManager:
         if not self.wave_ongoing:
             print("Starting next wave")
             self.wave_number += 1  # Increment wave number
+            if self.spawn_interval > 5:
+                self.spawn_interval -= 1
             self.start_wave()  # Begin the new wave
         else:
             print(f"Cannot start next wave yet! Current wave is still ongoing")  # Prevents starting a new wave mid-wave
@@ -98,6 +101,7 @@ class WaveManager:
         """
         self.wave_number = 0  # Reset wave number to the first wave
         self.spawn_cooldown = 0  # Reset the cooldown for enemy spawning
+        self.spawn_interval =  SPAWNING_DATA[self.difficulty]["Default_Spawn_Interval"]
         self.wave_ongoing = False  # Mark the wave as inactive
         print(f"difficulty:{self.difficulty}")
         self.accumulated_spawns = {enemy_name: count for enemy_name, count in SPAWNING_DATA[self.difficulty]["Default_Spawn"].items()} # Reset Spawn Counter

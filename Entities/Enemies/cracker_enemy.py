@@ -19,7 +19,7 @@ class Cracker(Enemy):
             end_position (tuple): The (x, y) ending position of the enemy.
             path (list): A list of grid coordinates representing the enemy's path.
         """
-        super().__init__(start_position, path, reward=12, health=70, speed=1)
+        super().__init__(start_position, path, reward=12, health=80, speed=1)
         
         # Assigns the default sprite for the Cracker
         self.sprite = sprites.CRACKER_SPRITE

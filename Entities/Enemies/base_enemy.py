@@ -103,6 +103,8 @@ class Enemy(ABC):
         """
         print(f"Enemy taken {damage} damage")  # Print damage message for debugging
         self.health -= damage  # Decrease the enemy's health by the damage amount
+        print(f"Enemy {self} has {self.health} health left")
+        self.check_is_dead()  # Checks if the enemy is dead
 
     def check_is_dead(self):
         """
@@ -128,6 +130,5 @@ class Enemy(ABC):
         Updates the enemy state (e.g., movement, health checks).
         """
         self.move()  # Moves the enemy
-        self.check_is_dead()  # Checks if the enemy is dead
         self.check_has_reached_end()
 

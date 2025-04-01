@@ -7,7 +7,7 @@ class Tower(ABC):
     Base class for creating towers in the game. This class handles basic tower mechanics such as shooting, 
     targeting, range checking, and bullet creation. It also includes attributes related to tower stats.
     """
-    def __init__(self, x_grid_pos, y_grid_pos, upgrade_data=None, range=5, fire_rate=30, bullet_speed=10, bullet_damage=2, cost=10):
+    def __init__(self, x_grid_pos, y_grid_pos, upgrade_data=None, tile_splash_radius=0, range=5, fire_rate=30, bullet_speed=10, bullet_damage=2, cost=10):
         """
         Initializes a Tower instance with the given attributes.
         
@@ -38,6 +38,7 @@ class Tower(ABC):
         self.fire_rate = fire_rate  # The fire rate (how often the tower shoots)
         self.bullet_speed = bullet_speed  # Speed of the bullet
         self.bullet_damage = bullet_damage  # Damage dealt by each bullet
+        self.tile_splash_radius = tile_splash_radius # Splash radius in tiles
 
         self.bullets = []  # List to store the bullets fired by the tower
 
@@ -66,7 +67,7 @@ class Tower(ABC):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage))
+        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, tile_splash_radius=self.tile_splash_radius))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate
@@ -139,10 +140,13 @@ class Tower(ABC):
                 self.fire_rate = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Fire Rate"]
                 self.bullet_speed = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Bullet Speed"]
                 self.bullet_damage = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Bullet Damage"]
+                self.tile_splash_radius = self.upgrade_data[f"UPGRADE {self.upgrade_level}"].get("Splash Radius", 0)
                 print(f"Tower {self} has been successfuly upgraded")
-                return self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
+                return True, self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
             else:
                 print("Upgrade failed: Not enough money")
+                return False, "Not Enough Money to Upgrade Tower"
         else:
             print("Upgrade Failed: Max Level Already!")
+            return False, "Max Upgrade Level Reached"
 

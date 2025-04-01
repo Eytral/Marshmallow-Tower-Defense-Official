@@ -8,7 +8,7 @@ class Bullet:
     Handles the bullet's movement, rendering, and interaction with targets.
     """
     
-    def __init__(self, x_pos, y_pos, target, speed=5, damage=1, bullet_type="Default", width=config.GRID_CELL_SIZE//5, height=config.GRID_CELL_SIZE//5, bullet_sprite=sprites.BULLET_SPRITE):
+    def __init__(self, x_pos, y_pos, target, speed=5, damage=1, tile_splash_radius=0, bullet_type="Default", width=config.GRID_CELL_SIZE//5, height=config.GRID_CELL_SIZE//5, bullet_sprite=sprites.BULLET_SPRITE):
         """
         Initializes the bullet with its properties.
 
@@ -23,6 +23,7 @@ class Bullet:
         self.speed = speed  # Speed at which the bullet moves
         self.damage = damage  # Amount of damage the bullet inflicts
         self.type = bullet_type # Type of Bullet
+        self.tile_splash_radius = tile_splash_radius
 
         self.sprite = bullet_sprite  # Bullet's visual representation (sprite)
 
