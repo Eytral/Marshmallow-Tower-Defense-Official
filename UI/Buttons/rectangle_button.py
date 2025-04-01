@@ -10,6 +10,8 @@ class RectangleButton(Button):
 
     def draw(self, screen):
         colour = self.hover_colour if self.is_hovered() else self.normal_colour
+        if self.is_selected:
+            colour = self.click_colour
 
         # Draw the button as a rectangle with the chosen color
         pygame.draw.rect(screen, colour, self.rect)

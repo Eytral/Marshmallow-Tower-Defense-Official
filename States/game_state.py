@@ -76,6 +76,7 @@ class Game_State(State):
             self.map.reset_map()
             self.enemies = []
             self.towers = {}
+            self.mouse.change_current_action(None, None)
             print("Game successfully exited")
 
     def change_difficulty(self, difficulty):
@@ -191,19 +192,22 @@ class Game_State(State):
         """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
+                button_clicked = False
                 for button in self.gamebuttons.buttons:
                     if button.is_hovered():
                         button.click()
+                        button_clicked = True
 
                 for button in self.tower_selection_menu.buttons:
                     if button.is_hovered():
                         button.click()
+                        button_clicked = True
 
                 if self.mouse.current_action == "Placing Tower":
                     self.place_tower()
-
                 else:
-                    self.select_tile()
+                    if not button_clicked:
+                        self.select_tile()
 
     def place_tower(self):
         """
@@ -216,7 +220,9 @@ class Game_State(State):
                 print(f"successfully placed tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
                 self.mouse.change_current_action(None, None) # Reset mouse action and selection
         else:
-            self.error_message = "Not enough money to place tower"
+            if self.map.check_tile((self.mouse.map_grid_x, self.mouse.map_grid_y)) != "outside grid":
+                self.error_message = "Not enough money to place tower"
+                self.mouse.change_current_action(None, None)
 
     def remove_tower(self): # If able to remove tower
         """

@@ -23,6 +23,7 @@ class Button(ABC):
         self.font = font or pygame.font.SysFont('Arial', 24)
 
         self.is_clicked = False
+        self.is_selected = False
 
     def is_hovered(self):
         """

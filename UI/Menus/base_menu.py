@@ -42,9 +42,9 @@ class Menu(ABC):
 
             if button_type == "RectangleButton":
                 # Add optional color attributes only if they exist
-                normal_color = button.get("Normal_Colour", (50, 50, 50))
-                hover_colour = button.get("Hover_Colour", (255, 0, 0))
-                click_colour = button.get("Clicked_Colour", (255, 255, 0))
+                normal_color = button.get("Normal_Colour", (50, 50, 50)) # GREY
+                hover_colour = button.get("Hover_Colour", (255, 0, 0)) # RED
+                click_colour = button.get("Clicked_Colour", (0, 0, 255)) # BLUE
 
                 button = RectangleButton((position_x, position_y), action, width, height, normal_color, hover_colour, click_colour, text=text, font=font)
             
