@@ -34,7 +34,7 @@ class BirdFlamethrower(Tower):
                 "Bullet Speed": 18,
                 "Bullet Damage": 10,
                 "Cost": 150,
-                "Splash Radius": 1
+                "Splash Radius": 0
             },
 
             "UPGRADE 3": {
@@ -43,7 +43,7 @@ class BirdFlamethrower(Tower):
                 "Bullet Speed": 20,
                 "Bullet Damage": 15,
                 "Cost": 250,
-                "Splash Radius": 2
+                "Splash Radius": 0.5
             }
         }
         super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=3, fire_rate=15, bullet_speed=10, bullet_damage=5, cost=45)

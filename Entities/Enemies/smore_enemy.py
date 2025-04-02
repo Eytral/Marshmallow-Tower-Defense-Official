@@ -19,15 +19,19 @@ class Smore(Enemy):
             path (list): A list of grid coordinates representing the enemy's path.
         """
         # Calls the parent class constructor to set common enemy attributes
-        super().__init__(start_position, path, reward=35, health=500, speed=1)
+        super().__init__(start_position, path, reward=35, health=200, speed=1)
 
         # Assigns the default sprite for the Smore
         self.sprite = sprites.SMORE_SPRITE
 
-    def die(self):
+    def die(self, game_state):
         """
         The unique death mechanic for the Smore: when it dies, it splits into multiple smaller enemies.
         (Currently unimplemented)
         """
-        # Placeholder method for splitting the Smore into multiple enemies upon death
-        pass
+        super().die(game_state)
+        game_state.create_enemy("cracker enemy", Start_Position=self.position, Path=self.path)
+        game_state.create_enemy("marshmallow enemy", Start_Position=self.position, Path=self.path)
+        game_state.create_enemy("dark_chocolate enemy", Start_Position=self.position, Path=self.path)
+        game_state.create_enemy("cracker enemy", Start_Position=self.position, Path=self.path)
+        

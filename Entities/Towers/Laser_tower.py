@@ -21,7 +21,7 @@ class Laser(Tower):
         upgrade_data = {
             "UPGRADE 1": {
                 "Range": 4,
-                "Fire Rate": 4,
+                "Fire Rate": 3,
                 "Bullet Speed": 45,
                 "Bullet Damage": 1.5,
                 "Cost": 100
@@ -29,7 +29,7 @@ class Laser(Tower):
 
             "UPGRADE 2": {
                 "Range": 4,
-                "Fire Rate": 3,
+                "Fire Rate": 2,
                 "Bullet Speed": 50,
                 "Bullet Damage": 2,
                 "Cost": 150
@@ -43,7 +43,7 @@ class Laser(Tower):
                 "Cost": 250
             }
             }
-        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=4, fire_rate=5, bullet_speed=40, bullet_damage=1, cost=35)
+        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=4, fire_rate=4, bullet_speed=40, bullet_damage=1, cost=35)
 
         # Set the specific sprite for the Laser tower
         self.sprite = sprites.LASER_TOWER_SPRITE

@@ -7,7 +7,7 @@ from Entities.Towers.Saw_tower import Saw
 from Entities.Towers.Turret_Tower import Turret
 from Constants import config
 
-from Game.game_data import ENEMY_CLASS_MAP, SPAWNING_DATA
+from Game.game_data import ENEMY_CLASS_MAP, GAME_DATA
 
 from UI.Menus.in_game_menu import GameButtons
 from UI.Menus.tower_selection_menu import TowerSelectionMenu
@@ -44,9 +44,9 @@ class Game_State(State):
         self.wave_manager = WaveManager(self.game)
 
         self.difficulty = "Normal"
-        self.starting_money = SPAWNING_DATA[self.difficulty]["Game_Stats"]["Starting Money"]
+        self.starting_money = GAME_DATA[self.difficulty]["Game_Stats"]["Starting Money"]
         self.money = self.starting_money
-        self.starting_health = SPAWNING_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
+        self.starting_health = GAME_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
         self.health = self.starting_health
 
         self.total_error_message_display_time = 100
@@ -82,8 +82,8 @@ class Game_State(State):
     def change_difficulty(self, difficulty):
         self.difficulty = difficulty
         self.wave_manager.difficulty = difficulty
-        self.starting_health = SPAWNING_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
-        self.starting_money = SPAWNING_DATA[self.difficulty]["Game_Stats"]["Starting Money"]
+        self.starting_health = GAME_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
+        self.starting_money = GAME_DATA[self.difficulty]["Game_Stats"]["Starting Money"]
         print(f"Successfully changed difficuty to {difficulty}")
 
     def update(self, events):
@@ -102,19 +102,14 @@ class Game_State(State):
         self.update_towers()   # Update tower behavior (attacking, targeting, etc.)
         self.check_bullet_collisions()  # Check and handle bullet collisions with enemies
         self.wave_manager.update()
-        self.game_over()
+        self.check_game_over()
+        self.check_win()
         self.handle_events(events)  # Process player input and other events
 
     def update_enemies(self):
         """Update each enemy's movement and remove dead or finished enemies."""
         for enemy in self.enemies:
-            enemy.update()
-            if enemy.is_dead or enemy.reached_end:
-                self.enemies.remove(enemy) # Remove enemy once reached end
-                if enemy.is_dead:
-                    self.money += enemy.reward # Reward money for enemy kill
-                if enemy.reached_end:
-                    self.health -= enemy.damage # Subtract health for failure to prevent enemy reaching end
+            enemy.update(self)
 
     def update_towers(self):
         """Update all towers, making them attack enemies if applicable."""
@@ -130,17 +125,23 @@ class Game_State(State):
                         if bullet.tile_splash_radius > 0:
                             for enemy in self.enemies:
                                 splash_radius = bullet.tile_splash_radius * config.GRID_CELL_SIZE
-                                if enemy.position[0]-bullet.x_pos <= splash_radius or enemy.position[1]-bullet.y_pos <= splash_radius:
+                                if bullet.x_pos-enemy.position[0] <= splash_radius or bullet.y_pos-enemy.position[1] <= splash_radius:
                                     enemy.take_damage(tower.bullet_damage, damage_type=bullet.type)
                         else:
                             enemy.take_damage(tower.bullet_damage, damage_type=bullet.type)
                                 
                         bullet.active = False  # Mark bullet as inactive after hitting an enemy
 
-    def game_over(self):
+    def check_game_over(self):
         if self.health <= 0:
             self.game.state_manager.change_state("Menu_State")
             self.game.state_manager.states["Menu_State"].change_menu("GameOverMenu")
+
+    def check_win(self):
+        if not self.wave_manager.wave_ongoing:
+            if self.wave_manager.wave_number == GAME_DATA[self.difficulty]["Last Wave"]:
+                self.game.state_manager.change_state("Menu_State")
+                self.game.state_manager.states["Menu_State"].change_menu("WinMenu")
 
     def draw(self, screen):
         """
@@ -256,11 +257,17 @@ class Game_State(State):
             self.mouse.change_current_action(None, None)
             print(f"successfully unselected")
 
-    def create_enemy(self, enemy_name):
+    def create_enemy(self, enemy_name, **kwargs):
+        if kwargs:
+            start_position = kwargs["Start_Position"]
+            enemy_path = kwargs["Path"]
+        else:
+            start_position = self.map.enemy_start_pos
+            enemy_path = self.map.enemy_path
         print(f"created enemy {enemy_name}")
         enemy_class = ENEMY_CLASS_MAP.get(enemy_name)
         if enemy_class:
-            self.enemies.append(enemy_class(self.map.enemy_start_pos, self.map.enemy_path))
+            self.enemies.append(enemy_class(start_position, enemy_path))
         
     def create_tower(self, tower, position):
         self.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)] = tower(*position)

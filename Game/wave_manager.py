@@ -1,6 +1,6 @@
 from Constants import config  # Import game configuration settings
 from Entities.Enemies.base_enemy import Enemy  # Import the base enemy class
-from Game.game_data import SPAWNING_DATA
+from Game.game_data import GAME_DATA
 import math
 import random
 
@@ -25,13 +25,13 @@ class WaveManager:
         """
         self.difficulty = "Normal"
         self.wave_number = 0  # Tracks the current wave number
-        self.spawn_interval = SPAWNING_DATA[self.difficulty]["Default_Spawn_Interval"]  # Time between enemy spawns (in frames/ticks)
+        self.spawn_interval = GAME_DATA[self.difficulty]["Default_Spawn_Interval"]  # Time between enemy spawns (in frames/ticks)
         self.spawn_cooldown = 0  # Countdown timer for enemy spawning
         self.wave_ongoing = False  # Flag indicating whether a wave is currently active
         self.game = game  # Stores reference to the game instance
 
 
-        self.accumulated_spawns = {enemy_name: count for enemy_name, count in SPAWNING_DATA[self.difficulty]["Default_Spawn"].items()}
+        self.accumulated_spawns = {enemy_name: count for enemy_name, count in GAME_DATA[self.difficulty]["Default_Spawn"].items()}
         self.enemy_spawn_queue = []
 
     def create_enemy_spawn_queue(self, spawn_wave):
@@ -43,7 +43,7 @@ class WaveManager:
     def initialise_next_spawn_wave(self):
         if self.wave_number > 1:
             print(f"accumulated spawns before update is: {self.accumulated_spawns}")
-            for enemy_name, increment in SPAWNING_DATA[self.difficulty]["Increment"].items():
+            for enemy_name, increment in GAME_DATA[self.difficulty]["Increment"].items():
                 self.accumulated_spawns[enemy_name] += increment
             print(f"accumulated spawns data straight after update is: {self.accumulated_spawns}")
 
@@ -57,16 +57,13 @@ class WaveManager:
         """
 
         #print(f"spawn cooldown is: {self.spawn_cooldown}")
-        if len(self.enemy_spawn_queue) > 0:
-            if self.spawn_cooldown == 0:
-                enemy_name = self.enemy_spawn_queue[0] # Spawn first enemy in queue
-                del self.enemy_spawn_queue[0]
-                self.game.state_manager.current_state.create_enemy(enemy_name) # Create a new enemy at the designated start position
-                self.spawn_cooldown = self.spawn_interval  # Reset cooldown timer
-            else:
-                self.spawn_cooldown -= 1  # Reduce cooldown timer until next spawn
+        if self.spawn_cooldown == 0:
+            enemy_name = self.enemy_spawn_queue[0] # Spawn first enemy in queue
+            del self.enemy_spawn_queue[0]
+            self.game.state_manager.current_state.create_enemy(enemy_name) # Create a new enemy at the designated start position
+            self.spawn_cooldown = self.spawn_interval  # Reset cooldown timer
         else:
-            self.wave_ongoing = False  # Ends the wave once all enemies are spawned
+                self.spawn_cooldown -= 1  # Reduce cooldown timer until next spawn
 
     def start_wave(self):
         """
@@ -93,7 +90,12 @@ class WaveManager:
         Updates the wave state and spawns enemies if a wave is ongoing.
         """
         if self.wave_ongoing:
-            self.spawn_enemies()
+            if len(self.enemy_spawn_queue) > 0:
+                self.spawn_enemies()
+            else:
+                if len(self.game.state_manager.current_state.enemies) == 0:
+                    print("All enemies are dead! Wave over.")
+                    self.wave_ongoing = False
 
     def reset_waves(self):
         """
@@ -101,8 +103,8 @@ class WaveManager:
         """
         self.wave_number = 0  # Reset wave number to the first wave
         self.spawn_cooldown = 0  # Reset the cooldown for enemy spawning
-        self.spawn_interval =  SPAWNING_DATA[self.difficulty]["Default_Spawn_Interval"]
+        self.spawn_interval =  GAME_DATA[self.difficulty]["Default_Spawn_Interval"]
         self.wave_ongoing = False  # Mark the wave as inactive
         print(f"difficulty:{self.difficulty}")
-        self.accumulated_spawns = {enemy_name: count for enemy_name, count in SPAWNING_DATA[self.difficulty]["Default_Spawn"].items()} # Reset Spawn Counter
+        self.accumulated_spawns = {enemy_name: count for enemy_name, count in GAME_DATA[self.difficulty]["Default_Spawn"].items()} # Reset Spawn Counter
         self.enemy_spawn_queue = [] # Clear Spawn Queue

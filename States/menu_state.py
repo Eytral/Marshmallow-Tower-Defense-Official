@@ -5,6 +5,8 @@ from UI.Menus.main_menu import MainMenu
 from UI.Menus.options_menu import OptionsMenu
 from UI.Menus.level_select_menu import LevelSelectMenu
 from UI.Menus.game_over_menu import GameOverMenu
+from UI.Menus.win_menu import WinMenu
+
 
 class Menu_State(State):
     """Main menu engine - Manages the menu logic, events, and rendering"""
@@ -22,7 +24,8 @@ class Menu_State(State):
             "MainMenu": MainMenu(self.game),
             "OptionsMenu": OptionsMenu(self.game),
             "LevelSelectMenu": LevelSelectMenu(self.game),
-            "GameOverMenu": GameOverMenu(self.game)
+            "GameOverMenu": GameOverMenu(self.game),
+            "WinMenu": WinMenu(self.game)
         }
         self.title_font = pygame.font.Font(None, 74)  # Font for the title
 

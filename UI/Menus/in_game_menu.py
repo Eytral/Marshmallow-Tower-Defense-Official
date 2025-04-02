@@ -1,6 +1,7 @@
 import pygame
 from Constants import config
 from UI.Menus.base_menu import Menu
+from Game.game_data import GAME_DATA
 
 class GameButtons(Menu):
     """
@@ -64,13 +65,13 @@ class GameButtons(Menu):
         text_rect.center = (300, config.SCREEN_TOPBAR_HEIGHT//2)  # Position the title at the center horizontally and near the top
         screen.blit(money_surface, text_rect)  # Draw the title on the screen
         
-        wave_surface = self.body_font.render(f"Wave: {self.game.state_manager.states["Game_State"].wave_manager.wave_number}", True, (255, 255, 255))  # White color for title text
+        wave_surface = self.body_font.render(f"Wave: {self.game.state_manager.states["Game_State"].wave_manager.wave_number}/{GAME_DATA[self.game.state_manager.current_state.difficulty]["Last Wave"]}", True, (255, 255, 255))  # White color for title text
         text_rect = wave_surface.get_rect()  # Get the rect of the title text for positioning
         text_rect.center = (500, config.SCREEN_TOPBAR_HEIGHT//2)  # Position the title at the center horizontally and near the top
         screen.blit(wave_surface, text_rect)  # Draw the title on the screen
 
         if self.game.state_manager.current_state.wave_manager.wave_ongoing:
-            text = "Spawning..."
+            text = "Ongoing..."
             colour = (255, 0, 0)
         else:
             text = "Ready"

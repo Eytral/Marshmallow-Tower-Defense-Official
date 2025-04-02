@@ -42,8 +42,7 @@ class Enemy(ABC):
         self.hitbox = pygame.Rect(self.position[0], self.position[1], self.width, self.height)  # Hitbox for collision detection
 
         self.health = self.max_health  # Set current health to max health
-        self.is_dead = False  # Track if the enemy is dead
-        self.reached_end = False  # Track if the enemy has reached the end of its path
+        self.active = True
 
         self.path = copy.deepcopy(path)
 
@@ -106,29 +105,37 @@ class Enemy(ABC):
         print(f"Enemy {self} has {self.health} health left")
         self.check_is_dead()  # Checks if the enemy is dead
 
-    def check_is_dead(self):
-        """
-        Checks if the enemy is dead (health <= 0). If dead, calls the die() method.
-        """
-        if self.health <= 0:
-            self.die()  # Calls the die() method to handle death logic
-
-    def die(self):
+    def die(self, game_state):
         """
         Handles the enemy's death logic (set it as dead).
         """
-        self.is_dead = True  # Set the enemy as dead
+        game_state.money += self.reward
+        game_state.enemies.remove(self)
+        self.active = False
         print(f"Enemy has reached end (of its life)")  # Print message for debugging
+
+    def attack(self, game_state):
+        game_state.health -= self.damage
+        game_state.enemies.remove(self)
+        self.active = False
+
+    def check_is_dead(self):
+        if self.health <= 0:
+            return True
 
     def check_has_reached_end(self):
         if len(self.path) == 0:
-            self.reached_end = True
             print(f"Enemy has reached end")
+            return True
 
-    def update(self):
+    def update(self, game_state):
         """
         Updates the enemy state (e.g., movement, health checks).
         """
         self.move()  # Moves the enemy
-        self.check_has_reached_end()
+        if self.check_has_reached_end():
+            self.attack(game_state)
+
+        if self.check_is_dead():
+            self.die(game_state)
 

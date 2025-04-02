@@ -109,7 +109,10 @@ class Tower(ABC):
             enemies: List of all enemies in the game.
         """
         # If the tower has no target, or the target is dead or has reached the end, find a new target
-        if self.target is None or self.target.is_dead or self.target.reached_end or not self.in_range(self.target):
+        if self.target != None:
+            if not self.target.active or not self.in_range(self.target):
+                self.target = self.get_target(enemies)
+        else:
             self.target = self.get_target(enemies)
 
         # If the shoot cooldown has elapsed, shoot at the target

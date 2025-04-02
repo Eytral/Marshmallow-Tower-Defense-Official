@@ -18,7 +18,7 @@ class DarkChocolate(Enemy):
             end_position (tuple): The (x, y) ending position of the enemy.
             path (list): A list of grid coordinates representing the enemy's path.
         """
-        super().__init__(start_position, path, reward=18, health=100, speed=3)
+        super().__init__(start_position, path, reward=18, health=50, speed=3)
 
         # Assigns the default sprite for Dark Chocolate
         self.sprite = sprites.DARK_CHOCOLATE_SPRITE
@@ -27,7 +27,7 @@ class DarkChocolate(Enemy):
         self.melted_sprite = sprites.MELTED_DARK_CHOCOLATE_SPRITE
 
         # Armor reduces incoming damage (damage is divided by armor value)
-        self.armour = 5  
+        self.armour = 3  
 
     def take_damage(self, damage, **kwargs):
         """
@@ -50,7 +50,9 @@ class DarkChocolate(Enemy):
         
         # Reduce damage if armor is still active
         if self.armour != 0:
-            damage = damage // self.armour  # Armor acts as a damage divisor
+            damage -= self.armour  # Armor acts as a damage reduction
+            if damage < 0.5:
+                damage = 0.5
         
         # Apply the modified damage amount using the parent class method
         super().take_damage(damage)
@@ -62,7 +64,7 @@ class DarkChocolate(Enemy):
         - It loses all armor, making it vulnerable to future attacks.
         - (Optional) Sprite changes to a melted appearance.
         """
-        self.speed = 1  # Reduce speed after melting
-        self.armour = 0  # Remove armor protection
+        self.speed = 2  # Reduce speed after melting
+        self.armour = 1  # Reduce armor protection
 
         self.sprite = self.melted_sprite  

@@ -1,24 +1,25 @@
-SPAWNING_DATA = {
+GAME_DATA = {
     "Easy": {
         "Game_Stats": {
             "Starting Money": 75,
             "Starting Health": 120
         },
         "Default_Spawn": {
-            "marshmallow enemy": 2,
-            "cracker enemy": 0,
+            "marshmallow enemy": 3,
+            "cracker enemy": 1,
             "white_chocolate enemy": 0,
             "dark_chocolate enemy": 0,
             "smore enemy": 0
         },
         "Increment": {
-            "marshmallow enemy": 1.5,
-            "cracker enemy": 0.5,
-            "white_chocolate enemy": 0.2,
-            "dark_chocolate enemy": 0.05,
-            "smore enemy": 0.05
+            "marshmallow enemy": 3,
+            "cracker enemy": 1.5,
+            "white_chocolate enemy": 1,
+            "dark_chocolate enemy": 0.5,
+            "smore enemy": 0.2
         },
-        "Default_Spawn_Interval": 60
+        "Default_Spawn_Interval": 60,
+        "Last Wave": 30
     },
 
     "Normal": {
@@ -34,13 +35,14 @@ SPAWNING_DATA = {
             "smore enemy": 0
         },
         "Increment": {
-            "marshmallow enemy": 2.5,
-            "cracker enemy": 1,
-            "white_chocolate enemy": 0.6,
-            "dark_chocolate enemy": 0.2,
-            "smore enemy": 0.1
+            "marshmallow enemy": 4,
+            "cracker enemy": 2,
+            "white_chocolate enemy": 1.5,
+            "dark_chocolate enemy": 0.75,
+            "smore enemy": 0.3
         },
-        "Default_Spawn_Interval": 50
+        "Default_Spawn_Interval": 50,
+        "Last Wave": 50
     },
 
     "Hard": {
@@ -53,17 +55,18 @@ SPAWNING_DATA = {
             "cracker enemy": 3,
             "white_chocolate enemy": 1,
             "dark_chocolate enemy": 0,
-            "smore enemy": 0
+            "smore enemy": 1 # USED TO BE 0
         },
         "Increment": {
-            "marshmallow enemy": 3.5,
-            "cracker enemy": 2,
-            "white_chocolate enemy": 1.2,
-            "dark_chocolate enemy": 0.4,
-            "smore enemy": 0.3
+            "marshmallow enemy": 5,
+            "cracker enemy": 3,
+            "white_chocolate enemy": 2,
+            "dark_chocolate enemy": 1,
+            "smore enemy": 0.4
         },
-        "Default_Spawn_Interval": 40
-    }
+        "Default_Spawn_Interval": 40,
+        "Last Wave": 75
+    },
 }
 
 from Entities.Enemies.marshmallow_enemy import Marshmallow

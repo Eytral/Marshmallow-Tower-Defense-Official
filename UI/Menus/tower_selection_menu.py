@@ -80,12 +80,14 @@ class TowerSelectionMenu(Menu):
         if mouse.current_selection != None:
             if mouse.current_action == "Selected Tower":
                 tower = mouse.current_selection
+                selected_tower = True
             else:
                 tower = mouse.current_selection(0,0)
-            self.draw_tower_info(screen, tower)
+                selected_tower = False
+            self.draw_tower_info(screen, tower, selected_tower)
 
 
-    def draw_tower_info(self, screen, tower):
+    def draw_tower_info(self, screen, tower, selected_tower):
         next_upgrade_level = tower.upgrade_level+1
         if next_upgrade_level > len(tower.upgrade_data):
             tower_stats = [
@@ -101,7 +103,6 @@ class TowerSelectionMenu(Menu):
         else:
             tower_stats = [
                 tower.__class__.__name__,
-                f"Value: {tower.value}",
                 f"Upgrade Cost: {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Cost"]}",
                 f"Upgrade Level: {next_upgrade_level-1}",
                 f"Range (Tiles): {tower.range} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Range"]}",
@@ -110,6 +111,10 @@ class TowerSelectionMenu(Menu):
                 f"Damage: {tower.bullet_damage} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Bullet Damage"]}",
                 f"Splash Radius (tiles): {tower.tile_splash_radius} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"].get("Splash Radius", 0)}",
             ]
+            if selected_tower:
+                tower_stats.insert(1, f"Value: {tower.value}") 
+            else:
+                tower_stats.insert(1, f"Cost: {tower.cost}")
 
         for index, stat in enumerate(tower_stats):
             body_surface = self.stat_font.render(stat, True, (255, 255, 255)) # WHITE
