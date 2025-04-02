@@ -43,6 +43,7 @@ class Tower(ABC):
         self.bullets = []  # List to store the bullets fired by the tower
 
         self.cost = cost  # Cost to place the tower
+        self.value = self.cost
 
         self.upgrade_level = 0
         if upgrade_data != None:
@@ -136,6 +137,7 @@ class Tower(ABC):
         if self.upgrade_level < len(self.upgrade_data):
             if money >= self.upgrade_data[f"UPGRADE {self.upgrade_level+1}"]["Cost"]:
                 self.upgrade_level += 1
+                self.value += self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
                 self.range = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Range"]
                 self.fire_rate = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Fire Rate"]
                 self.bullet_speed = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Bullet Speed"]

@@ -69,6 +69,19 @@ class GameButtons(Menu):
         text_rect.center = (500, config.SCREEN_TOPBAR_HEIGHT//2)  # Position the title at the center horizontally and near the top
         screen.blit(wave_surface, text_rect)  # Draw the title on the screen
 
+        if self.game.state_manager.current_state.wave_manager.wave_ongoing:
+            text = "Spawning..."
+            colour = (255, 0, 0)
+        else:
+            text = "Ready"
+            colour = (0, 255, 0)
+        wave_ongoing_surface = self.body_font.render(text, True, colour)  # White color for title text
+        text_rect = wave_ongoing_surface.get_rect()  # Get the rect of the title text for positioning
+        text_rect.center = (700, config.SCREEN_TOPBAR_HEIGHT//2)  # Position the title at the center horizontally and near the top
+        screen.blit(wave_ongoing_surface, text_rect)  # Draw the title on the screen
+
+
+
     def start_wave(self):
         """
         Starts the next game enemy wave

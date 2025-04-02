@@ -37,7 +37,7 @@ class Laser(Tower):
 
             "UPGRADE 3": {
                 "Range": 5,
-                "Fire Rate": 2,
+                "Fire Rate": 0,
                 "Bullet Speed": 50,
                 "Bullet Damage": 3,
                 "Cost": 250

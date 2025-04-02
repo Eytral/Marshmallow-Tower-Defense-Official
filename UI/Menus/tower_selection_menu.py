@@ -85,30 +85,30 @@ class TowerSelectionMenu(Menu):
             self.draw_tower_info(screen, tower)
 
 
-#tile_splash_radius=0, range=5, fire_rate=30, bullet_speed=10, bullet_damage=2, cost=10
     def draw_tower_info(self, screen, tower):
         next_upgrade_level = tower.upgrade_level+1
         if next_upgrade_level > len(tower.upgrade_data):
             tower_stats = [
                 tower.__class__.__name__,
                 "Upgrade Level: MAX",
+                f"Value: {tower.value}",
                 f"Range (Tiles): {tower.range} MAX",
                 f"Fire Cooldown: {tower.fire_rate} MAX",
                 f"Bullet Speed: {tower.bullet_speed} MAX",
                 f"Damage: {tower.bullet_damage} MAX",
                 f"Splash Radius (tiles): {tower.tile_splash_radius} MAX",
-                f"Cost: {tower.cost} MAX"
             ]
         else:
             tower_stats = [
                 tower.__class__.__name__,
+                f"Value: {tower.value}",
+                f"Upgrade Cost: {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Cost"]}",
                 f"Upgrade Level: {next_upgrade_level-1}",
                 f"Range (Tiles): {tower.range} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Range"]}",
                 f"Fire Cooldown: {tower.fire_rate} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Fire Rate"]}",
                 f"Bullet Speed: {tower.bullet_speed} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Bullet Speed"]}",
                 f"Damage: {tower.bullet_damage} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Bullet Damage"]}",
                 f"Splash Radius (tiles): {tower.tile_splash_radius} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"].get("Splash Radius", 0)}",
-                f"Cost: {tower.cost} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Cost"]}"
             ]
 
         for index, stat in enumerate(tower_stats):

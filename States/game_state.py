@@ -193,6 +193,11 @@ class Game_State(State):
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 button_clicked = False
+
+                if self.mouse.current_action == "Placing Tower":
+                    self.place_tower()
+                    button_clicked = True
+
                 for button in self.gamebuttons.buttons:
                     if button.is_hovered():
                         button.click()
@@ -203,31 +208,34 @@ class Game_State(State):
                         button.click()
                         button_clicked = True
 
-                if self.mouse.current_action == "Placing Tower":
-                    self.place_tower()
-                else:
-                    if not button_clicked:
-                        self.select_tile()
+                if not button_clicked:
+                    self.select_tile()
 
     def place_tower(self):
         """
         Places a tower on the map grid and adds the selected tower to the game_state tower dict
         """
+        print("trying to place tower")
         if self.money >= self.mouse.current_selection(0,0).cost:
             if self.map.place_tower(self.mouse.map_grid_x, self.mouse.map_grid_y): # If able to place tower
                 self.create_tower(self.mouse.current_selection, (self.mouse.map_grid_x, self.mouse.map_grid_y)) # Create new tower object
                 self.money -= self.mouse.current_selection(0,0).cost # Removes the cost of the tower from money
                 print(f"successfully placed tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
                 self.mouse.change_current_action(None, None) # Reset mouse action and selection
+            else:
+                self.select_tile()
         else:
             if self.map.check_tile((self.mouse.map_grid_x, self.mouse.map_grid_y)) != "outside grid":
                 self.error_message = "Not enough money to place tower"
                 self.mouse.change_current_action(None, None)
+            else:
+                self.select_tile()
 
     def remove_tower(self): # If able to remove tower
         """
         Removes a tower on the map grid and removes the selected tower from the game_state tower dict
         """
+        self.money += self.towers[(self.mouse.current_selection.x_grid_pos, self.mouse.current_selection.y_grid_pos)].value//2
         self.map.remove_tower(self.mouse.current_selection.x_grid_pos, self.mouse.current_selection.y_grid_pos)
         del self.towers[(self.mouse.current_selection.x_grid_pos, self.mouse.current_selection.y_grid_pos)] # Delete selected tower object (at selected map coordinate)
         print(f"successfully deleted tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
