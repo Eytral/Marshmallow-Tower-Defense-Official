@@ -1,8 +1,8 @@
 import pygame
 from Constants import config
 from Constants import sprites
-from Game.grid import Grid
-from Game.maps import MAP_DATA
+from Game.Map.grid import Grid
+from Game.Map.maps import MAP_DATA
 import copy
 
 class Map:

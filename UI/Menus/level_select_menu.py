@@ -1,7 +1,7 @@
 from UI.Menus.base_menu import Menu
 from UI.Menus.base_menu import Menu
 from Constants import config
-from Game.maps import MAP_DATA
+from Game.Map.maps import MAP_DATA
 
 class LevelSelectMenu(Menu):
     def __init__(self, game):

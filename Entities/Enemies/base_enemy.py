@@ -110,13 +110,13 @@ class Enemy(ABC):
         Handles the enemy's death logic (set it as dead).
         """
         game_state.money += self.reward
-        game_state.enemies.remove(self)
+        game_state.enemy_manager.enemies.remove(self)
         self.active = False
         print(f"Enemy has reached end (of its life)")  # Print message for debugging
 
     def attack(self, game_state):
         game_state.health -= self.damage
-        game_state.enemies.remove(self)
+        game_state.enemy_manager.enemies.remove(self)
         self.active = False
 
     def check_is_dead(self):

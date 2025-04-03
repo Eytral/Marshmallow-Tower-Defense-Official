@@ -1,7 +1,7 @@
 import pytest
-from Game.map import Map
-from Game.grid import Grid
-from Game.maps import MAP_DATA
+from Game.Map.map import Map
+from Game.Map.grid import Grid
+from Game.Map.maps import MAP_DATA
 
 @pytest.fixture
 def test_map():

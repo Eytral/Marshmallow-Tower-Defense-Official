@@ -1,6 +1,6 @@
 from Constants import config  # Import game configuration settings
 from Entities.Enemies.base_enemy import Enemy  # Import the base enemy class
-from Game.game_data import GAME_DATA
+from Game.Core.game_data import GAME_DATA
 import math
 import random
 
@@ -14,7 +14,7 @@ class WaveManager:
         wave_enemy_spawn_increase: Number of additional enemies per wave.
     """
 
-    def __init__(self, game):
+    def __init__(self, game_state):
         """
         Initializes the WaveManager.
 
@@ -28,7 +28,7 @@ class WaveManager:
         self.spawn_interval = GAME_DATA[self.difficulty]["Default_Spawn_Interval"]  # Time between enemy spawns (in frames/ticks)
         self.spawn_cooldown = 0  # Countdown timer for enemy spawning
         self.wave_ongoing = False  # Flag indicating whether a wave is currently active
-        self.game = game  # Stores reference to the game instance
+        self.game_state = game_state  # Stores reference to the game instance
 
 
         self.accumulated_spawns = {enemy_name: count for enemy_name, count in GAME_DATA[self.difficulty]["Default_Spawn"].items()}
@@ -60,7 +60,7 @@ class WaveManager:
         if self.spawn_cooldown == 0:
             enemy_name = self.enemy_spawn_queue[0] # Spawn first enemy in queue
             del self.enemy_spawn_queue[0]
-            self.game.state_manager.current_state.create_enemy(enemy_name) # Create a new enemy at the designated start position
+            self.game_state.enemy_manager.create_enemy(enemy_name) # Create a new enemy at the designated start position
             self.spawn_cooldown = self.spawn_interval  # Reset cooldown timer
         else:
                 self.spawn_cooldown -= 1  # Reduce cooldown timer until next spawn
@@ -93,7 +93,7 @@ class WaveManager:
             if len(self.enemy_spawn_queue) > 0:
                 self.spawn_enemies()
             else:
-                if len(self.game.state_manager.current_state.enemies) == 0:
+                if len(self.game_state.enemy_manager.enemies) == 0:
                     print("All enemies are dead! Wave over.")
                     self.wave_ongoing = False
 

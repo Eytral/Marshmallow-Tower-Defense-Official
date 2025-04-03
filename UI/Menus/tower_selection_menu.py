@@ -67,7 +67,7 @@ class TowerSelectionMenu(Menu):
         # Render and draw the title of the menu
         title_surface = self.title_font.render(self.title, True, (255, 255, 255))  # White color for title text
         screen.blit(title_surface, (config.SCREEN_WIDTH - config.SCREEN_SIDEBAR_WIDTH, config.SCREEN_TOPBAR_HEIGHT // 2))  # Position the title
-        mouse = self.game.state_manager.current_state.mouse
+        mouse = self.game.state_manager.states["Game_State"].mouse
 
         for button in self.buttons:
             if mouse.current_action == "Placing Tower":
@@ -127,19 +127,19 @@ class TowerSelectionMenu(Menu):
         Args:
             tower_type: The type of tower to place, passed as a class reference (e.g., a subclass of Tower).
         """
-        self.game.state_manager.current_state.mouse.change_current_action("Placing Tower", tower_type)
+        self.game.state_manager.states["Game_State"].mouse.change_current_action("Placing Tower", tower_type)
 
     def remove_tower(self):
         """
         Allows the player to remove a tower.
         """
-        if self.game.state_manager.current_state.mouse.current_action == "Selected Tower":
-            self.game.state_manager.current_state.remove_tower()
+        if self.game.state_manager.states["Game_State"].mouse.current_action == "Selected Tower":
+            self.game.state_manager.states["Game_State"].tower_manager.remove_tower()
         
     def upgrade_tower(self):
         """
         Allows the player to upgrade a tower.
         """
-        if self.game.state_manager.current_state.mouse.current_action == "Selected Tower":
-            self.game.state_manager.current_state.upgrade_tower()
+        if self.game.state_manager.states["Game_State"].mouse.current_action == "Selected Tower":
+            self.game.state_manager.states["Game_State"].tower_manager.upgrade_tower()
 

@@ -47,7 +47,7 @@ class Bomb(Tower):
             }
             }
 
-        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=3, tile_splash_radius= 1, fire_rate=75, bullet_speed=6, bullet_damage=10, cost=50)
+        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=3, tile_splash_radius= 1, fire_rate=75, bullet_speed=6, bullet_damage=11, cost=50)
 
         # Set the specific sprite for the Bomb tower
         self.sprite = sprites.BOMB_TOWER_SPRITE

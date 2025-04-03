@@ -1,7 +1,7 @@
 import pygame
 from Constants import config
 from UI.Menus.base_menu import Menu
-from Game.game_data import GAME_DATA
+from Game.Core.game_data import GAME_DATA
 
 class GameButtons(Menu):
     """

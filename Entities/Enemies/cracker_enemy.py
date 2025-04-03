@@ -37,6 +37,7 @@ class Cracker(Enemy):
         self.speed = 2  # Increase speed after breaking
         self.broken = True
         self.sprite = self.broken_sprite
+        self.armour = 0
 
     def take_damage(self, damage, **kwargs):
         """
@@ -48,6 +49,7 @@ class Cracker(Enemy):
         
         Fire damage is ignored (Cracker is immune to fire).
         """
+        print(f"OG cracker damage is: {damage}")
         if 'damage_type' in kwargs:
             damage_type = kwargs['damage_type']
             if damage_type == "Fire":
@@ -58,13 +60,13 @@ class Cracker(Enemy):
         if self.health <= self.max_health // 2:  # 50% of original health
             if not self.broken:
                 self.become_broken()
-        if self.broken:
-            self.armour = 0
         
         damage -= self.armour
 
         if damage < 0.5:
             damage = 0.5
+
+        print(f"cracker enemy damage taken is: {damage}")
         
         # Apply the modified damage amount using the parent class method
         super().take_damage(damage)
