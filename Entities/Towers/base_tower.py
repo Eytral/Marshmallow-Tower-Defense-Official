@@ -40,8 +40,6 @@ class Tower(ABC):
         self.bullet_damage = bullet_damage  # Damage dealt by each bullet
         self.tile_splash_radius = tile_splash_radius # Splash radius in tiles
 
-        self.bullets = []  # List to store the bullets fired by the tower
-
         self.cost = cost  # Cost to place the tower
         self.value = self.cost
 
@@ -59,16 +57,12 @@ class Tower(ABC):
         # Draw the tower at its position on the grid
         screen.blit(self.sprite, (self.x_pos, self.y_pos))
 
-        # Draw all the active bullets fired by the tower
-        for bullet in self.bullets:
-            bullet.draw(screen)
-
-    def shoot(self):
+    def shoot(self, bullets):
         """
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, tile_splash_radius=self.tile_splash_radius))
+        bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, tile_splash_radius=self.tile_splash_radius))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate
@@ -101,7 +95,7 @@ class Tower(ABC):
                 return enemy
         return None  # Return None if no enemies are in range
 
-    def update(self, enemies):
+    def update(self, enemies, bullets):
         """
         Updates the tower's state: checks if it has a target, if it needs to shoot, and updates the bullets.
         
@@ -118,16 +112,13 @@ class Tower(ABC):
         # If the shoot cooldown has elapsed, shoot at the target
         if self.shoot_cooldown <= 0:
             if self.target is not None:
-                self.shoot()
+                self.shoot(bullets)
         else:
             # Decrease the cooldown timer
             self.shoot_cooldown -= 1
         
-        # Remove bullets that are no longer active (e.g., they hit the target)
-        self.bullets = [bullet for bullet in self.bullets if bullet.active]
-        
         # Update all active bullets
-        for bullet in self.bullets:
+        for bullet in bullets:
             bullet.update()
 
     def upgrade(self, money):

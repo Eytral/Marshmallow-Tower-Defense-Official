@@ -52,12 +52,12 @@ class BirdFlamethrower(Tower):
         self.sprite = sprites.BIRDFLAMETHROWER_TOWER_SPRITE
         
 
-    def shoot(self):
+    def shoot(self, bullets):
         """
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Fire", tile_splash_radius=self.tile_splash_radius, bullet_sprite=sprites.FIREBALL_SPRITE))
+        bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Fire", tile_splash_radius=self.tile_splash_radius, bullet_sprite=sprites.FIREBALL_SPRITE))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate

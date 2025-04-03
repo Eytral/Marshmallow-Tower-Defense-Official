@@ -32,6 +32,7 @@ class Game_State(State):
         
         # Dictionary to store towers (key: grid position, value: tower object)
         self.towers = {}
+        self.bullets = []
 
         # List to store active enemies
         self.enemies = []
@@ -76,6 +77,7 @@ class Game_State(State):
             self.map.reset_map()
             self.enemies = []
             self.towers = {}
+            self.bullets = []
             self.mouse.change_current_action(None, None)
             print("Game successfully exited")
 
@@ -114,23 +116,25 @@ class Game_State(State):
     def update_towers(self):
         """Update all towers, making them attack enemies if applicable."""
         for _, tower in self.towers.items():
-            tower.update(self.enemies)
+            tower.update(self.enemies, self.bullets)
 
     def check_bullet_collisions(self):
         """Check for bullet collisions with enemies and apply damage if hit."""
         for _, tower in self.towers.items():
-            for bullet in tower.bullets:
-                for enemy in self.enemies:
-                    if pygame.Rect.colliderect(bullet.hitbox, enemy.hitbox):  # Check collision
+            for bullet in self.bullets:
+                for initial_enemy in self.enemies:
+                    if pygame.Rect.colliderect(bullet.hitbox, initial_enemy.hitbox):  # Check collision
+                        initial_enemy.take_damage(tower.bullet_damage, damage_type=bullet.type)
                         if bullet.tile_splash_radius > 0:
                             for enemy in self.enemies:
-                                splash_radius = bullet.tile_splash_radius * config.GRID_CELL_SIZE
-                                if bullet.x_pos-enemy.position[0] <= splash_radius or bullet.y_pos-enemy.position[1] <= splash_radius:
-                                    enemy.take_damage(tower.bullet_damage, damage_type=bullet.type)
-                        else:
-                            enemy.take_damage(tower.bullet_damage, damage_type=bullet.type)
+                                if enemy != initial_enemy:
+                                    splash_radius = bullet.tile_splash_radius * config.GRID_CELL_SIZE
+                                    if bullet.x_pos-enemy.position[0] <= splash_radius or bullet.y_pos-enemy.position[1] <= splash_radius:
+                                        enemy.take_damage(tower.bullet_damage//2, damage_type=bullet.type)
                                 
                         bullet.active = False  # Mark bullet as inactive after hitting an enemy
+                        self.bullets.remove(bullet)
+                        break
 
     def check_game_over(self):
         if self.health <= 0:
@@ -157,6 +161,7 @@ class Game_State(State):
         self.gamebuttons.draw(screen)
         self.tower_selection_menu.draw(screen)
         self.draw_error_message(screen)
+        self.draw_bullets(screen)
 
     def highlight_selected_tower(self, screen):
         if self.mouse.current_action == "Selected Tower":
@@ -167,6 +172,11 @@ class Game_State(State):
         """Draw all towers on the screen."""
         for _, tower in self.towers.items():
             tower.draw(screen)
+
+    def draw_bullets(self, screen):
+        """Draw all bullets on the screen"""
+        for bullet in self.bullets:
+            bullet.draw(screen)
 
     def draw_enemies(self, screen):
         """Draw all enemies on the screen."""

@@ -48,12 +48,12 @@ class Saw(Tower):
         # Set the specific sprite for the Saw tower
         self.sprite = sprites.SAW_TOWER_SPRITE
 
-    def shoot(self):
+    def shoot(self, bullets):
         """
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        self.bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Saw", bullet_sprite=sprites.SAW_SPRITE))
+        bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Saw", bullet_sprite=sprites.SAW_SPRITE))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate
