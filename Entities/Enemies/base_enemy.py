@@ -102,8 +102,9 @@ class Enemy(ABC):
         """
         print(f"Enemy taken {damage} damage")  # Print damage message for debugging
         self.health -= damage  # Decrease the enemy's health by the damage amount
+        if not self.check_is_dead():
+            self.damage = self.health//2 + self.max_health//5 # Updates damage to scale with remaining health (plus bonus damage based on enemy toughness)
         print(f"Enemy {self} has {self.health} health left")
-        self.check_is_dead()  # Checks if the enemy is dead
 
     def die(self, game_state):
         """

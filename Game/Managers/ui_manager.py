@@ -28,3 +28,16 @@ class UIManager():
         self.draw_error_message(screen)
         self.game_buttons.draw(screen)
         self.tower_selection_menu.draw(screen)
+
+    def select_tile(self):
+        if (self.game_state.mouse.map_grid_x, self.game_state.mouse.map_grid_y) in self.game_state.tower_manager.towers:
+            self.game_state.mouse.change_current_action("Selected Tower", self.game_state.tower_manager.towers[(self.game_state.mouse.map_grid_x, self.game_state.mouse.map_grid_y)])
+            print(f"successfully selected tower {self.game_state.tower_manager.towers[(self.game_state.mouse.map_grid_x, self.game_state.mouse.map_grid_y)]}")
+        else:
+            self.game_state.mouse.change_current_action(None, None)
+            print(f"successfully unselected")
+
+    def highlight_selected_tower(self, screen):
+        if self.game_state.mouse.current_action == "Selected Tower":
+            grid_x, grid_y = self.game_state.mouse.current_selection.x_grid_pos, self.game_state.mouse.current_selection.y_grid_pos
+            self.game_state.map.map_grid.highlight_square(screen, grid_x, grid_y, colour=(0, 255, 255))

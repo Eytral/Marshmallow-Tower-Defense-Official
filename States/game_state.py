@@ -15,6 +15,7 @@ from Game.Managers.bullet_manager import BulletManager
 from Game.Managers.enemy_manager import EnemyManager
 from Game.Managers.tower_manager import TowerManager
 from Game.Managers.ui_manager import UIManager
+from Game.Managers.game_manager import GameManager
 
 
 import pygame
@@ -39,6 +40,7 @@ class Game_State(State):
         self.enemy_manager = EnemyManager(self)
         self.wave_manager = WaveManager(self)
         self.ui_manager = UIManager(self)
+        self.game_manager = GameManager(self)
         self.mouse = Mouse()
 
         self.difficulty = "Normal"
@@ -46,8 +48,6 @@ class Game_State(State):
         self.money = self.starting_money
         self.starting_health = GAME_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
         self.health = self.starting_health
-
-
 
     def enter(self, *args):
         """
@@ -75,13 +75,6 @@ class Game_State(State):
             self.mouse.change_current_action(None, None)
             print("Game successfully exited")
 
-    def change_difficulty(self, difficulty):
-        self.difficulty = difficulty
-        self.wave_manager.difficulty = difficulty
-        self.starting_health = GAME_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
-        self.starting_money = GAME_DATA[self.difficulty]["Game_Stats"]["Starting Money"]
-        print(f"Successfully changed difficuty to {difficulty}")
-
     def update(self, events):
         """
         Updates the game based on player input and game logic.
@@ -98,45 +91,9 @@ class Game_State(State):
         self.tower_manager.update_towers()   # Update tower behavior (attacking, targeting, etc.)
         self.bullet_manager.check_bullet_collisions()  # Check and handle bullet collisions with enemies
         self.wave_manager.update()
-        self.check_game_over()
-        self.check_win()
+        self.game_manager.check_game_over()
+        self.game_manager.check_win()
         self.handle_events(events)  # Process player input and other events
-
-
-
-
-    def check_game_over(self):
-        if self.health <= 0:
-            self.game.state_manager.change_state("Menu_State")
-            self.game.state_manager.states["Menu_State"].change_menu("GameOverMenu")
-
-    def check_win(self):
-        if not self.wave_manager.wave_ongoing:
-            if self.wave_manager.wave_number == GAME_DATA[self.difficulty]["Last Wave"]:
-                self.game.state_manager.change_state("Menu_State")
-                self.game.state_manager.states["Menu_State"].change_menu("WinMenu")
-
-    def draw(self, screen):
-        """
-        Handles rendering the game to the screen.
-
-        Args:
-            screen: pygame display surface
-        """
-        self.map.draw(screen, self.mouse.map_grid_x, self.mouse.map_grid_y)  # Draw the game map
-
-        self.tower_manager.draw(screen)
-        self.bullet_manager.draw(screen)
-        self.enemy_manager.draw(screen)
-        self.ui_manager.draw(screen)
-
-        self.highlight_selected_tower(screen) # Draw Highlight for selection AFTER drawing tower for clarity
-
-
-    def highlight_selected_tower(self, screen):
-        if self.mouse.current_action == "Selected Tower":
-            grid_x, grid_y = self.mouse.current_selection.x_grid_pos, self.mouse.current_selection.y_grid_pos
-            self.map.map_grid.highlight_square(screen, grid_x, grid_y, colour=(0, 255, 255))
 
     def handle_events(self, events):
         """
@@ -164,13 +121,20 @@ class Game_State(State):
                         button_clicked = True
 
                 if not button_clicked:
-                    self.select_tile()
+                    self.ui_manager.select_tile()
 
-                
-    def select_tile(self):
-        if (self.mouse.map_grid_x, self.mouse.map_grid_y) in self.tower_manager.towers:
-            self.mouse.change_current_action("Selected Tower", self.tower_manager.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)])
-            print(f"successfully selected tower {self.tower_manager.towers[(self.mouse.map_grid_x, self.mouse.map_grid_y)]}")
-        else:
-            self.mouse.change_current_action(None, None)
-            print(f"successfully unselected")
+    def draw(self, screen):
+        """
+        Handles rendering the game to the screen.
+
+        Args:
+            screen: pygame display surface
+        """
+        self.map.draw(screen, self.mouse.map_grid_x, self.mouse.map_grid_y, )  # Draw the game map
+
+        self.tower_manager.draw(screen)
+        self.bullet_manager.draw(screen)
+        self.enemy_manager.draw(screen)
+        self.ui_manager.draw(screen)
+
+        self.ui_manager.highlight_selected_tower(screen) # Draw Highlight for selection AFTER drawing tower for clarity

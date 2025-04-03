@@ -31,13 +31,13 @@ class TowerManager():
                 print(f"successfully placed tower, tower list is{self.towers}") # print dictionary of towers for debugging purposes
                 self.game_state.mouse.change_current_action(None, None) # Reset mouse action and selection
             else:
-                self.game_state.select_tile()
+                self.game_state.ui_manager.select_tile()
         else:
             if self.game_state.map.check_tile((self.game_state.mouse.map_grid_x, self.game_state.mouse.map_grid_y)) != "outside grid":
                 self.game_state.ui_manager.error_message = "Not enough money to place tower"
                 self.game_state.mouse.change_current_action(None, None)
             else:
-                self.game_state.select_tile()
+                self.game_state.ui_manager.select_tile()
 
     def remove_tower(self): # If able to remove tower
         """
