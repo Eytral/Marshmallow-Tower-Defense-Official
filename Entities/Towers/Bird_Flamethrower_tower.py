@@ -1,8 +1,8 @@
 from Constants import sprites
 from Entities.Towers.base_tower import Tower
-from Entities.bullet import Bullet
+from Entities.Projectiles.flame import Flame
 
-class BirdFlamethrower(Tower):
+class BirdFlamethrowerTower(Tower):
     """
     A specific tower type that represents a Bird Flamethrower tower. It inherits from the Tower base class 
     and has its own unique attributes, such as range, fire rate, bullet speed, and bullet damage.
@@ -57,7 +57,7 @@ class BirdFlamethrower(Tower):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Fire", tile_splash_radius=self.tile_splash_radius, bullet_sprite=sprites.FIREBALL_SPRITE))
+        bullets.append(Flame(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Fire", tile_splash_radius=self.tile_splash_radius, bullet_sprite=sprites.FIREBALL_SPRITE))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate

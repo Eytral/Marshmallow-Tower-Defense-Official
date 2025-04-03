@@ -2,7 +2,7 @@ from Constants import config, sprites
 import pygame
 import math
 
-class Bullet:
+class Projectile():
     """
     The Bullet class represents a bullet fired by a tower.
     Handles the bullet's movement, rendering, and interaction with targets.
@@ -54,24 +54,11 @@ class Bullet:
         # Scale by bullet speed
         return (dir_x / magnitude) * self.speed, (dir_y / magnitude) * self.speed
 
-    def update(self):
-        """ Move the bullet and check if it reaches the target. """
-        if not self.active:
-            return
-
-        self.x_pos += self.vx
-        self.y_pos += self.vy
-        self.hitbox = pygame.Rect(self.x_pos, self.y_pos, config.GRID_CELL_SIZE//5, config.GRID_CELL_SIZE//5)
-
-    def draw(self, screen):
-        """ Render the bullet on screen. """
-        screen.blit(self.sprite, (self.x_pos, self.y_pos))
-
     def predict_enemy_position(self):
         """ Predict where the enemy will be when the bullet reaches it using iterative correction. """
         # Get current and previous enemy positions
         enemy_x, enemy_y = self.target.centre_position  # Current position
-    # print(f"bullet think enemyx is {enemy_x} and enemy is {enemy_y}")
+        # print(f"bullet think enemyx is {enemy_x} and enemy is {enemy_y}")
         prev_enemy_x, prev_enemy_y = self.target.prev_centre_position
 
         # Estimate enemy velocity
@@ -101,3 +88,30 @@ class Bullet:
             enemy_y = predicted_y
 
         return predicted_x, predicted_y
+
+    def update(self, enemies):
+        """ Move the bullet and check if it reaches the target. """
+        self.move()
+        self.check_collisions(enemies)
+        
+    def move(self):
+        self.x_pos += self.vx
+        self.y_pos += self.vy
+        self.hitbox = pygame.Rect(self.x_pos, self.y_pos, config.GRID_CELL_SIZE//5, config.GRID_CELL_SIZE//5)
+
+    def check_collisions(self, enemies):
+        for initial_enemy in enemies:
+            if pygame.Rect.colliderect(self.hitbox, initial_enemy.hitbox):  # Check collision
+                initial_enemy.take_damage(self.damage, damage_type=self.type)
+                if self.tile_splash_radius > 0:
+                    for enemy in enemies:
+                        if enemy != initial_enemy:
+                            splash_radius = self.tile_splash_radius * config.GRID_CELL_SIZE
+                            if self.x_pos-enemy.position[0] <= splash_radius or self.y_pos-enemy.position[1] <= splash_radius:
+                                enemy.take_damage(self.damage//2, damage_type=self.type)
+                        
+                self.active = False  # Mark bullet as inactive after hitting an enemy
+
+    def draw(self, screen):
+        """ Render the bullet on screen. """
+        screen.blit(self.sprite, (self.x_pos, self.y_pos))

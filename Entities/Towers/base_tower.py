@@ -1,5 +1,5 @@
 from Constants import config, sprites
-from Entities.bullet import Bullet
+from Entities.Projectiles.base_projectile import Projectile
 from abc import ABC, abstractmethod
 
 class Tower(ABC):
@@ -62,7 +62,7 @@ class Tower(ABC):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        bullets.append(Bullet(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, tile_splash_radius=self.tile_splash_radius))
+        bullets.append(Projectile(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, tile_splash_radius=self.tile_splash_radius))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.fire_rate
@@ -116,10 +116,6 @@ class Tower(ABC):
         else:
             # Decrease the cooldown timer
             self.shoot_cooldown -= 1
-        
-        # Update all active bullets
-        for bullet in bullets:
-            bullet.update()
 
     def upgrade(self, money):
         """

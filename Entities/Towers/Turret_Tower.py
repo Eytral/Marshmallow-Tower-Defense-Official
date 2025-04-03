@@ -1,8 +1,8 @@
 from Constants import sprites
 from Entities.Towers.base_tower import Tower
-from Entities.bullet import Bullet
+from Entities.Projectiles.bullet import Bullet
 
-class Turret(Tower):
+class TurretTower(Tower):
     """
     A specific tower type that represents a Turret tower. It inherits from the Tower base class
     and has its own unique attributes such as range, fire rate, bullet speed, and bullet damage.

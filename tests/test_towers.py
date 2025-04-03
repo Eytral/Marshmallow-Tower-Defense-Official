@@ -1,7 +1,7 @@
 import pytest
 from Constants import config, sprites
 from Entities.Towers.Bird_Flamethrower_tower import BirdFlamethrower
-from Entities.bullet import Bullet
+from Entities.Projectiles.base_projectile import Bullet
 from Entities.Enemies.base_enemy import Enemy  # Assuming you have an Enemy class to use
 
 # Use a simple mock for the sprite

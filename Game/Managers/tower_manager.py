@@ -1,8 +1,8 @@
-from Entities.Towers.Bird_Flamethrower_tower import BirdFlamethrower
-from Entities.Towers.Bomb_tower import Bomb
-from Entities.Towers.Laser_tower import Laser
-from Entities.Towers.Saw_tower import Saw
-from Entities.Towers.Turret_Tower import Turret
+from Entities.Towers.Bird_Flamethrower_tower import BirdFlamethrowerTower
+from Entities.Towers.Bomb_tower import BombTower
+from Entities.Towers.Laser_tower import LaserTower
+from Entities.Towers.Saw_tower import SawTower
+from Entities.Towers.Turret_Tower import TurretTower
 
 
 class TowerManager():
