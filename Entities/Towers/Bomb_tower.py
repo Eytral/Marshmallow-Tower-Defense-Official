@@ -18,19 +18,29 @@ class BombTower(Tower):
             y_grid_pos: Y grid position of the tower on the map.
         """
         # Initialize the parent Tower class with the given grid position and specific attributes
-        upgrade_data = {
+        tower_data = {
+
+            "UPGRADE 0":{
+                "Range": 3,
+                "Attack Delay": 75,
+                "Bullet Speed": 6,
+                "Bullet Damage": 11,
+                "Cost": 50,
+                "Splash Radius": 2
+            },
+            
             "UPGRADE 1": {
                 "Range": 5,
-                "Fire Rate": 60,
+                "Attack Delay": 60,
                 "Bullet Speed": 6,
                 "Bullet Damage": 15,
                 "Cost": 100,
-                "Splash Radius": 1
+                "Splash Radius": 1.5
             },
 
             "UPGRADE 2": {
                 "Range": 6,
-                "Fire Rate": 50,
+                "Attack Delay": 50,
                 "Bullet Speed": 7,
                 "Bullet Damage": 20,
                 "Cost": 150,
@@ -39,7 +49,7 @@ class BombTower(Tower):
 
             "UPGRADE 3": {
                 "Range": 7,
-                "Fire Rate": 40,
+                "Attack Delay": 40,
                 "Bullet Speed": 9,
                 "Bullet Damage": 30,
                 "Cost": 250,
@@ -47,10 +57,11 @@ class BombTower(Tower):
             }
             }
 
-        super().__init__(x_grid_pos, y_grid_pos, upgrade_data=upgrade_data, range=3, tile_splash_radius= 1, fire_rate=75, bullet_speed=6, bullet_damage=11, cost=50)
+        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data, range=3, attack_delay=75, bullet_speed=6, bullet_damage=11, cost=50)
 
         # Set the specific sprite for the Bomb tower
         self.sprite = sprites.BOMB_TOWER_SPRITE
+        self.tile_splash_radius = 2
 
     def shoot(self, bullets):
         """
@@ -60,4 +71,8 @@ class BombTower(Tower):
         bullets.append(Bomb(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Bomb", tile_splash_radius=self.tile_splash_radius, bullet_sprite=sprites.BOMB_SPRITE))
 
         # Reset the cooldown to the fire rate
-        self.shoot_cooldown = self.fire_rate
+        self.shoot_cooldown = self.attack_delay
+
+    def upgrade(self, money):
+        if super().upgrade(money):
+            self.tile_splash_radius = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Splash Radius"]

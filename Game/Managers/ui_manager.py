@@ -28,6 +28,8 @@ class UIManager():
         self.draw_error_message(screen)
         self.game_buttons.draw(screen)
         self.tower_selection_menu.draw(screen)
+        if self.game_state.mouse.current_action == "Selected Tower":
+            self.highlight_tower_range(screen)
 
     def select_tile(self):
         if (self.game_state.mouse.map_grid_x, self.game_state.mouse.map_grid_y) in self.game_state.tower_manager.towers:
@@ -41,3 +43,29 @@ class UIManager():
         if self.game_state.mouse.current_action == "Selected Tower":
             grid_x, grid_y = self.game_state.mouse.current_selection.x_grid_pos, self.game_state.mouse.current_selection.y_grid_pos
             self.game_state.map.map_grid.highlight_square(screen, grid_x, grid_y, colour=(0, 255, 255))
+
+    def highlight_tower_range(self, screen):
+        tower = self.game_state.mouse.current_selection
+
+        # Calculate the raw rectangle position and size
+        left = tower.x_pos - tower.range * config.GRID_CELL_SIZE
+        top = tower.y_pos - tower.range * config.GRID_CELL_SIZE
+        width = (tower.range * 2 + 1) * config.GRID_CELL_SIZE
+        height = width  # Same as width since the range is a square
+
+        # Get the map boundaries
+        map_width = config.GRID_SIZE
+        map_height = config.GRID_SIZE
+
+        # Clamp the rectangle to the map's boundaries
+        clamped_left = max(0, left)
+        clamped_top = max(config.SCREEN_TOPBAR_HEIGHT, top)
+        clamped_right = min(map_width, left + width)
+        clamped_bottom = min(config.SCREEN_TOPBAR_HEIGHT+map_height, top + height)
+
+        # Recalculate the clamped rectangle's width and height
+        clamped_width = clamped_right - clamped_left
+        clamped_height = clamped_bottom - clamped_top
+
+        # Draw the clamped rectangle
+        pygame.draw.rect(screen, (255, 0, 0), (clamped_left, clamped_top, clamped_width, clamped_height), 3)

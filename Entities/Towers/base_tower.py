@@ -7,7 +7,7 @@ class Tower(ABC):
     Base class for creating towers in the game. This class handles basic tower mechanics such as shooting, 
     targeting, range checking, and bullet creation. It also includes attributes related to tower stats.
     """
-    def __init__(self, x_grid_pos, y_grid_pos, upgrade_data=None, tile_splash_radius=0, range=5, fire_rate=30, bullet_speed=10, bullet_damage=2, cost=10):
+    def __init__(self, x_grid_pos, y_grid_pos, tower_data=None, range=5, attack_delay=30, bullet_speed=10, bullet_damage=2, cost=10):
         """
         Initializes a Tower instance with the given attributes.
         
@@ -15,7 +15,7 @@ class Tower(ABC):
             x_grid_pos: X grid position of the tower on the map.
             y_grid_pos: Y grid position of the tower on the map.
             range: The attack range of the tower, in grid tiles.
-            fire_rate: The rate at which the tower fires (cooldown time).
+            attack_delay: The rate at which the tower fires (cooldown time).
             bullet_speed: The speed at which the tower's bullets travel.
             bullet_damage: The amount of damage a bullet deals.
             cost: The cost of placing the tower on the map.
@@ -35,17 +35,16 @@ class Tower(ABC):
         self.target = None  # The current target that the tower is shooting at
 
         self.range = range  # The attack range of the tower
-        self.fire_rate = fire_rate  # The fire rate (how often the tower shoots)
+        self.attack_delay = attack_delay  # The fire rate (how often the tower shoots)
         self.bullet_speed = bullet_speed  # Speed of the bullet
         self.bullet_damage = bullet_damage  # Damage dealt by each bullet
-        self.tile_splash_radius = tile_splash_radius # Splash radius in tiles
 
         self.cost = cost  # Cost to place the tower
         self.value = self.cost
 
         self.upgrade_level = 0
-        if upgrade_data != None:
-            self.upgrade_data = upgrade_data
+        if tower_data != None:
+            self.tower_data = tower_data
 
     def draw(self, screen):
         """
@@ -62,10 +61,10 @@ class Tower(ABC):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        bullets.append(Projectile(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, tile_splash_radius=self.tile_splash_radius))
+        bullets.append(Projectile(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage))
 
         # Reset the cooldown to the fire rate
-        self.shoot_cooldown = self.fire_rate
+        self.shoot_cooldown = self.attack_delay
 
     def in_range(self, enemy):
         """
@@ -124,17 +123,16 @@ class Tower(ABC):
         Args:
             money: Amount of money the player has when attempting upgrade
         """
-        if self.upgrade_level < len(self.upgrade_data):
-            if money >= self.upgrade_data[f"UPGRADE {self.upgrade_level+1}"]["Cost"]:
+        if self.upgrade_level < len(self.tower_data)-1:
+            if money >= self.tower_data[f"UPGRADE {self.upgrade_level+1}"]["Cost"]:
                 self.upgrade_level += 1
-                self.value += self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
-                self.range = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Range"]
-                self.fire_rate = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Fire Rate"]
-                self.bullet_speed = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Bullet Speed"]
-                self.bullet_damage = self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Bullet Damage"]
-                self.tile_splash_radius = self.upgrade_data[f"UPGRADE {self.upgrade_level}"].get("Splash Radius", 0)
+                self.value += self.tower_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
+                self.range = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Range"]
+                self.attack_delay = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Attack Delay"]
+                self.bullet_speed = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Bullet Speed"]
+                self.bullet_damage = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Bullet Damage"]
                 print(f"Tower {self} has been successfuly upgraded")
-                return True, self.upgrade_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
+                return True, self.tower_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
             else:
                 print("Upgrade failed: Not enough money")
                 return False, "Not Enough Money to Upgrade Tower"

@@ -51,6 +51,7 @@ class TowerManager():
 
     def upgrade_tower(self):
         result = self.game_state.mouse.current_selection.upgrade(self.game_state.money)
+        print(result)
         if result[0]:
             self.game_state.money -= result[1]
         else:

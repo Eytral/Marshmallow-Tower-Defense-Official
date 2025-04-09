@@ -19,7 +19,7 @@ class Cracker(Enemy):
             end_position (tuple): The (x, y) ending position of the enemy.
             path (list): A list of grid coordinates representing the enemy's path.
         """
-        super().__init__(start_position, path, reward=12, health=75, speed=1)
+        super().__init__(start_position, path, reward=12, health=50, speed=1)
         
         # Assigns the default sprite for the Cracker
         self.sprite = sprites.CRACKER_SPRITE
@@ -27,7 +27,7 @@ class Cracker(Enemy):
         # Unimplemented sprite for when cracker "breaks":
         self.broken_sprite = sprites.BROKEN_CRACKER_SPRITE  
         self.broken = False
-        self.armour = 5
+        self.armour = 6
 
     def become_broken(self):
         """
@@ -61,7 +61,7 @@ class Cracker(Enemy):
             if not self.broken:
                 self.become_broken()
         
-        damage -= self.armour
+        damage -= self.armour//2
 
         if damage < 0.5:
             damage = 0.5

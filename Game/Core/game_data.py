@@ -55,7 +55,7 @@ GAME_DATA = {
             "cracker enemy": 3,
             "white_chocolate enemy": 1,
             "dark_chocolate enemy": 0,
-            "smore enemy": 1 # USED TO BE 0
+            "smore enemy": 0
         },
         "Increment": {
             "marshmallow enemy": 5,

@@ -88,37 +88,51 @@ class TowerSelectionMenu(Menu):
 
 
     def draw_tower_info(self, screen, tower, selected_tower):
-        next_upgrade_level = tower.upgrade_level+1
-        if next_upgrade_level > len(tower.upgrade_data):
-            tower_stats = [
-                tower.__class__.__name__,
-                "Upgrade Level: MAX",
-                f"Value: {tower.value}",
-                f"Range (Tiles): {tower.range} MAX",
-                f"Fire Cooldown: {tower.fire_rate} MAX",
-                f"Bullet Speed: {tower.bullet_speed} MAX",
-                f"Damage: {tower.bullet_damage} MAX",
-                f"Splash Radius (tiles): {tower.tile_splash_radius} MAX",
-            ]
-        else:
-            tower_stats = [
-                tower.__class__.__name__,
-                f"Upgrade Cost: {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Cost"]}",
-                f"Upgrade Level: {next_upgrade_level-1}",
-                f"Range (Tiles): {tower.range} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Range"]}",
-                f"Fire Cooldown: {tower.fire_rate} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Fire Rate"]}",
-                f"Bullet Speed: {tower.bullet_speed} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Bullet Speed"]}",
-                f"Damage: {tower.bullet_damage} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"]["Bullet Damage"]}",
-                f"Splash Radius (tiles): {tower.tile_splash_radius} -> {tower.upgrade_data[f"UPGRADE {next_upgrade_level}"].get("Splash Radius", 0)}",
-            ]
-            if selected_tower:
-                tower_stats.insert(1, f"Value: {tower.value}") 
-            else:
-                tower_stats.insert(1, f"Cost: {tower.cost}")
+        # Initialize a dictionary to hold stats
+        tower_stats = {}
 
-        for index, stat in enumerate(tower_stats):
-            body_surface = self.stat_font.render(stat, True, (255, 255, 255)) # WHITE
-            screen.blit(body_surface, (self.TOWER_BUTTON_X_POSITION + self.TOWER_BUTTON_WIDTH + 20, (config.SCREEN_TOPBAR_HEIGHT)+index*20))
+        # Add the tower name as the first entry
+        tower_stats["Name"] = tower.__class__.__name__
+
+        # Add the cost of the tower
+        if selected_tower:
+            # For selected towers, cost is not relevant
+            tower_stats["Value"] = tower.value
+        else:
+            # For unselected towers, show the cost
+            tower_stats["Cost"] = tower.cost
+
+        # Get the current upgrade level stats
+        current_upgrade_stats = tower.tower_data[f"UPGRADE {tower.upgrade_level}"]
+
+        # Add current stats to the dictionary (excluding "Cost" since it's already handled)
+        for stat, value in current_upgrade_stats.items():
+            if stat != "Cost":
+                tower_stats[stat] = f"{value}"
+
+        # Handle selected tower scenario
+        if selected_tower:
+            # Determine the next upgrade level
+            next_upgrade_level = tower.upgrade_level + 1
+
+            # Check if there's a next upgrade level
+            if next_upgrade_level > len(tower.tower_data) - 1:
+                # No more upgrades, mark stats as "MAX"
+                for stat in current_upgrade_stats:
+                    if stat != "Cost":
+                        tower_stats[stat] += " (MAX)"
+            else:
+                # Add next upgrade stats
+                next_upgrade_stats = tower.tower_data[f"UPGRADE {next_upgrade_level}"]
+                for stat, next_value in next_upgrade_stats.items():
+                    if stat != "Cost" and stat in tower_stats:
+                        tower_stats[stat] += f" -> {next_value}"
+
+        # Render and display the stats on the screen
+        for index, (stat, value) in enumerate(tower_stats.items()):
+            display_text = f"{stat}: {value}"
+            body_surface = self.stat_font.render(display_text, True, (255, 255, 255))
+            screen.blit(body_surface, (self.TOWER_BUTTON_X_POSITION + self.TOWER_BUTTON_WIDTH + 20, config.SCREEN_TOPBAR_HEIGHT + index * 20))
 
     def select_tower(self, tower_type):
         """
