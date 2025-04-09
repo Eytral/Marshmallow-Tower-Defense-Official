@@ -13,14 +13,14 @@ class OptionsMenu(Menu):
         button_data = [
             {"Text": "Main Menu",
              "Action": self.back_to_main_menu},
-            {"Text": "Practise",
-             "Action": self.enable_practise},
             {"Text": "Easy Difficulty",
               "Action": lambda: self.change_difficulty("Easy")},
             {"Text": "Normal Difficulty",
              "Action": lambda: self.change_difficulty("Normal")},
             {"Text": "Hard Difficulty",
-             "Action": lambda: self.change_difficulty("Hard")}
+             "Action": lambda: self.change_difficulty("Hard")},
+            {"Text": "Practise",
+             "Action": self.toggle_practise}
         ]
         for index, button in enumerate(button_data):
             button["ButtonType"] = "RectangleButton"
@@ -41,9 +41,14 @@ class OptionsMenu(Menu):
 
         # Draw Difficulty Text
         difficulty_surface = self.body_font.render(f"Difficulty: {self.game.state_manager.states["Game_State"].difficulty}", True, (255, 255, 255))  # White color for title text
-        text_rect = difficulty_surface.get_rect()  # Get the rect of the title text for positioning
-        text_rect.center = (config.SCREEN_WIDTH // 2, config.SCREEN_HEIGHT-100)  # Position the title at the center horizontally and near the bottom
-        screen.blit(difficulty_surface, text_rect)  # Draw the title on the screen
+        practise_surface = self.body_font.render(f"Practise is: {self.game.state_manager.states["Game_State"].practise}", True, (255, 255, 255))  # White color for title text
+
+        surface_list = [difficulty_surface, practise_surface]
+
+        for i, surface in enumerate(surface_list):
+            text_rect = surface.get_rect()  # Get the rect of the title text for positioning
+            text_rect.center = (config.SCREEN_WIDTH // 2, config.SCREEN_HEIGHT-100+50*i)  # Position the title at the center horizontally and near the bottom
+            screen.blit(surface, text_rect)  # Draw the title on the screen
 
     # ACTIONS (called when the respective buttons are clicked)
     def back_to_main_menu(self):
@@ -56,6 +61,5 @@ class OptionsMenu(Menu):
     def change_difficulty(self, difficulty):
         self.game.state_manager.states["Game_State"].game_manager.change_difficulty(difficulty)
 
-    def enable_practise(self):
-        self.game.state_manager.states["Game_State"].money = 999999
-        self.game.state_manager.states["Game_State"].health = 999999
+    def toggle_practise(self):
+        self.game.state_manager.states["Game_State"].game_manager.toggle_practise()

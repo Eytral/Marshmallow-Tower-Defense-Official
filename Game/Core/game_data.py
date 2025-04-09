@@ -19,7 +19,7 @@ GAME_DATA = {
             "smore enemy": 0.2
         },
         "Default_Spawn_Interval": 60,
-        "Last Wave": 30
+        "Last Wave": 20
     },
 
     "Normal": {
@@ -42,7 +42,7 @@ GAME_DATA = {
             "smore enemy": 0.3
         },
         "Default_Spawn_Interval": 50,
-        "Last Wave": 50
+        "Last Wave": 30
     },
 
     "Hard": {
@@ -65,7 +65,7 @@ GAME_DATA = {
             "smore enemy": 0.4
         },
         "Default_Spawn_Interval": 40,
-        "Last Wave": 75
+        "Last Wave": 35
     },
 }
 

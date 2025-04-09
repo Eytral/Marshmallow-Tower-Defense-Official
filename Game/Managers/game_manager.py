@@ -10,6 +10,17 @@ class GameManager():
         self.game_state.starting_health = GAME_DATA[difficulty]["Game_Stats"]["Starting Health"]
         self.game_state.starting_money = GAME_DATA[difficulty]["Game_Stats"]["Starting Money"]
         print(f"Successfully changed difficuty to {difficulty}")
+
+    def toggle_practise(self):
+        if self.game_state.practise:
+            self.game_state.practise = False
+            self.game_state.starting_health = GAME_DATA[self.game_state.difficulty]["Game_Stats"]["Starting Health"]
+            self.game_state.starting_money = GAME_DATA[self.game_state.difficulty]["Game_Stats"]["Starting Money"]
+        else:
+            self.game_state.practise = True
+            self.game_state.starting_health = 9999
+            self.game_state.starting_money = 9999
+        print(f"Successfully toggle practise to: {self.game_state.practise}")
     
     def check_game_over(self):
         if self.game_state.health <= 0:

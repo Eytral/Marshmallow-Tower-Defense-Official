@@ -4,9 +4,8 @@ import pygame
 
 class Bomb(Projectile):
     def __init__(self, x_pos, y_pos, target, bullet_speed, bullet_damage, tile_splash_radius):
-        super().__init__(x_pos, y_pos, target, bullet_speed, bullet_damage)
+        super().__init__(x_pos, y_pos, target, bullet_speed, bullet_damage, bullet_sprite=sprites.BOMB_SPRITE)
         self.type="Bomb"
-        self.sprite=sprites.BOMB_SPRITE
         self.tile_splash_radius = tile_splash_radius
 
     def check_collisions(self, enemies):

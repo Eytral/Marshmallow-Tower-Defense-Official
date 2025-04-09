@@ -8,7 +8,7 @@ class Projectile():
     Handles the bullet's movement, rendering, and interaction with targets.
     """
     
-    def __init__(self, x_pos, y_pos, target, speed=5, damage=1, bullet_type="Default", width=config.GRID_CELL_SIZE//5, height=config.GRID_CELL_SIZE//5, bullet_sprite=sprites.BULLET_SPRITE):
+    def __init__(self, x_pos, y_pos, target, speed=5, damage=1, bullet_type="Default", width=config.GRID_CELL_SIZE//3, height=config.GRID_CELL_SIZE//3, bullet_sprite=sprites.BULLET_SPRITE):
         """
         Initializes the bullet with its properties.
 
@@ -24,7 +24,6 @@ class Projectile():
         self.damage = damage  # Amount of damage the bullet inflicts
         self.type = bullet_type # Type of Bullet
 
-        self.sprite = bullet_sprite  # Bullet's visual representation (sprite)
 
         self.x_pos = x_pos  # Initial x-position of the bullet
         self.y_pos = y_pos  # Initial y-position of the bullet
@@ -39,7 +38,8 @@ class Projectile():
         # Compute velocity to move toward predicted position
         self.vx, self.vy = self.get_bullet_velocity()
 
-        self.hitbox = pygame.Rect(self.x_pos, self.y_pos, self.width, self.height)  # Bullet's hitbox for collision detection
+        self.sprite=pygame.transform.scale(bullet_sprite, (self.width, self.height))
+        self.hitbox = pygame.Rect(self.x_pos - self.width // 2, self.y_pos - self.height // 2, self.width, self.height)
 
     def get_bullet_velocity(self):
         """ Compute velocity vector to move toward predicted target position. """
@@ -96,7 +96,7 @@ class Projectile():
     def move(self):
         self.x_pos += self.vx
         self.y_pos += self.vy
-        self.hitbox = pygame.Rect(self.x_pos, self.y_pos, config.GRID_CELL_SIZE//5, config.GRID_CELL_SIZE//5)
+        self.hitbox = pygame.Rect(self.x_pos - self.width // 2, self.y_pos - self.height // 2, self.width, self.height)
 
     def check_collisions(self, enemies):
         for initial_enemy in enemies:
@@ -107,4 +107,5 @@ class Projectile():
 
     def draw(self, screen):
         """ Render the bullet on screen. """
-        screen.blit(self.sprite, (self.x_pos, self.y_pos))
+        screen.blit(self.sprite, (self.x_pos - self.width // 2, self.y_pos - self.height // 2))
+
