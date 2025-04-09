@@ -6,7 +6,7 @@ class Flame(Projectile):
     def __init__(self, x_pos, y_pos, target, bullet_speed, bullet_damage, range, tower_grid_pos):
         super().__init__(x_pos, y_pos, target, bullet_speed, bullet_damage, width=config.GRID_CELL_SIZE, height=config.GRID_CELL_SIZE, bullet_sprite=sprites.FIREBALL_SPRITE)
         self.type="Fire"
-        self.range = range*1.5
+        self.range = range + range//5
         self.tower_grid_pos = tower_grid_pos
 
     def update(self, enemies):

@@ -21,7 +21,7 @@ class BombTower(Tower):
         tower_data = {
 
             "UPGRADE 0":{
-                "Range": 3,
+                "Range": 2,
                 "Attack Delay": 75,
                 "Bullet Speed": 6,
                 "Bullet Damage": 11,
@@ -30,7 +30,7 @@ class BombTower(Tower):
             },
             
             "UPGRADE 1": {
-                "Range": 5,
+                "Range": 2.5,
                 "Attack Delay": 60,
                 "Bullet Speed": 6,
                 "Bullet Damage": 15,
@@ -39,7 +39,7 @@ class BombTower(Tower):
             },
 
             "UPGRADE 2": {
-                "Range": 6,
+                "Range": 2.75,
                 "Attack Delay": 50,
                 "Bullet Speed": 7,
                 "Bullet Damage": 20,
@@ -48,7 +48,7 @@ class BombTower(Tower):
             },
 
             "UPGRADE 3": {
-                "Range": 7,
+                "Range": 3,
                 "Attack Delay": 40,
                 "Bullet Speed": 9,
                 "Bullet Damage": 30,

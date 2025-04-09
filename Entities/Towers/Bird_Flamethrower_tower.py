@@ -21,7 +21,7 @@ class BirdFlamethrowerTower(Tower):
         tower_data = {
 
             "UPGRADE 0": {
-                "Range": 2,
+                "Range": 1,
                 "Attack Delay": 2,
                 "Bullet Speed": 10,
                 "Bullet Damage": 0.1,
@@ -29,7 +29,7 @@ class BirdFlamethrowerTower(Tower):
             },
 
             "UPGRADE 1": {
-                "Range": 2,
+                "Range": 1.2,
                 "Attack Delay": 2,
                 "Bullet Speed": 14,
                 "Bullet Damage": 0.1,
@@ -37,7 +37,7 @@ class BirdFlamethrowerTower(Tower):
             },
 
             "UPGRADE 2": {
-                "Range": 2.5,
+                "Range": 1.5,
                 "Attack Delay": 1,
                 "Bullet Speed": 18,
                 "Bullet Damage": 0.2,
@@ -45,7 +45,7 @@ class BirdFlamethrowerTower(Tower):
             },
 
             "UPGRADE 3": {
-                "Range": 3,
+                "Range": 2,
                 "Attack Delay": 0,
                 "Bullet Speed": 20,
                 "Bullet Damage": 0.25,

@@ -21,7 +21,7 @@ class TurretTower(Tower):
         tower_data = {
             
             "UPGRADE 0": {
-                "Range": 6,
+                "Range": 3,
                 "Attack Delay": 25,
                 "Bullet Speed": 20,
                 "Bullet Damage": 6,
@@ -29,7 +29,7 @@ class TurretTower(Tower):
             },
 
             "UPGRADE 1": {
-                "Range": 7,
+                "Range": 3.5,
                 "Attack Delay": 21,
                 "Bullet Speed": 20,
                 "Bullet Damage": 9,
@@ -37,7 +37,7 @@ class TurretTower(Tower):
             },
 
             "UPGRADE 2": {
-                "Range": 9,
+                "Range": 4,
                 "Attack Delay": 17,
                 "Bullet Speed": 22,
                 "Bullet Damage": 13,
@@ -45,7 +45,7 @@ class TurretTower(Tower):
             },
 
             "UPGRADE 3": {
-                "Range": 9,
+                "Range": 5,
                 "Attack Delay": 14,
                 "Bullet Speed": 25,
                 "Bullet Damage": 15,

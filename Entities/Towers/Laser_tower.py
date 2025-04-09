@@ -21,34 +21,34 @@ class LaserTower(Tower):
         tower_data = {
 
             "UPGRADE 0": {
-                "Range": 4,
+                "Range": 3,
                 "Attack Delay": 4,
                 "Bullet Speed": 40,
-                "Bullet Damage": 1,
+                "Bullet Damage": 1.5,
                 "Cost": 35,
             },
 
             "UPGRADE 1": {
-                "Range": 4,
+                "Range": 3.25,
                 "Attack Delay": 3,
                 "Bullet Speed": 45,
-                "Bullet Damage": 1.5,
+                "Bullet Damage": 2,
                 "Cost": 100
             },
 
             "UPGRADE 2": {
-                "Range": 4,
+                "Range": 3.5,
                 "Attack Delay": 2,
                 "Bullet Speed": 50,
-                "Bullet Damage": 2,
+                "Bullet Damage": 2.5,
                 "Cost": 150
             },
 
             "UPGRADE 3": {
-                "Range": 5,
+                "Range": 4,
                 "Attack Delay": 0,
                 "Bullet Speed": 50,
-                "Bullet Damage": 3,
+                "Bullet Damage": 3.5,
                 "Cost": 250
             }
             }

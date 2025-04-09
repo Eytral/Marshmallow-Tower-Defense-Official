@@ -111,14 +111,6 @@ class Tower(ABC):
             True if the enemy is within range, False otherwise.
         """
         # Check if the enemy is within the tower's range in both x and y directions (grid units)
-        print(f"ENEMY GRID X: {enemy.grid_position[0]}")
-        print(f"TOWER GRID X: {self.x_grid_pos}")
-        print(f"x difference is: {abs(enemy.grid_position[0] - self.x_grid_pos)}")
-        
-        print(f"ENEMY GRID Y: {enemy.grid_position[1]}")
-        print(f"TOWER GRID Y: {self.y_grid_pos}")
-        print(f"y difference is: {abs(enemy.grid_position[1] - self.y_grid_pos)}")
-        print(f"Range is {self.range}")
         return abs(enemy.grid_position[0] - self.x_grid_pos) <= self.range and abs(enemy.grid_position[1] - self.y_grid_pos) <= self.range
 
     def get_target(self, enemies):

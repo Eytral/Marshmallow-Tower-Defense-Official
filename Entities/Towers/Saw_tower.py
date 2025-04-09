@@ -29,7 +29,7 @@ class SawTower(Tower):
             },
 
             "UPGRADE 1": {
-                "Range": 2,
+                "Range": 2.5,
                 "Attack Delay": 4,
                 "Bullet Speed": 80,
                 "Bullet Damage": 3,

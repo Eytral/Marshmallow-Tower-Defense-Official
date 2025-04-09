@@ -51,15 +51,24 @@ class Cracker(Enemy):
         """
         print(f"OG cracker damage is: {damage}")
         damage -= self.armour//2
-        if damage < 0.5:
-            damage = 0.5
+
         if 'damage_type' in kwargs:
             damage_type = kwargs['damage_type']
             if damage_type == "Fire":
-                damage = 0  # Negate fire damage
+                if damage < 0.1:
+                    damage = 0.1
+                damage /= 10  # Divide fire damage by SF 10
+            else:
+                if damage < 0.5:
+                    damage = 0.5
+
             if damage_type == "Bomb":
                 if not self.broken:
                     self.become_broken()
+        
+        else:
+            if damage < 0.5:
+                damage = 0.5
         if self.health <= self.max_health // 2:  # 50% of original health
             if not self.broken:
                 self.become_broken()

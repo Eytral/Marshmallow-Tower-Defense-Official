@@ -39,7 +39,6 @@ class OptionsMenu(Menu):
         # Create and render the title text
         super().draw(screen)  # Call the draw method from the parent class to draw the buttons
 
-        # Draw Difficulty Text
         difficulty_surface = self.body_font.render(f"Difficulty: {self.game.state_manager.states["Game_State"].difficulty}", True, (255, 255, 255))  # White color for title text
         practise_surface = self.body_font.render(f"Practise is: {self.game.state_manager.states["Game_State"].practise}", True, (255, 255, 255))  # White color for title text
 
