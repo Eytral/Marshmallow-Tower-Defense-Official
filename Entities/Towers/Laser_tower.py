@@ -52,7 +52,7 @@ class LaserTower(Tower):
                 "Cost": 250
             }
             }
-        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data, range=4, attack_delay=4, bullet_speed=40, bullet_damage=1, cost=35)
+        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data)
 
         # Set the specific sprite for the Laser tower
         self.sprite = sprites.LASER_TOWER_SPRITE
@@ -62,7 +62,7 @@ class LaserTower(Tower):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        bullets.append(Laser(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Laser", bullet_sprite=sprites.LASER_SPRITE))
+        bullets.append(Laser(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage))
 
         # Reset the cooldown to the Attack Delay
         self.shoot_cooldown = self.attack_delay

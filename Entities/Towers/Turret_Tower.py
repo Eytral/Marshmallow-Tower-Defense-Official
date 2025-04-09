@@ -53,7 +53,7 @@ class TurretTower(Tower):
             }
             }
 
-        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data, range=6, attack_delay=25, bullet_speed=20, bullet_damage=6, cost=25)
+        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data)
 
         # Set the specific sprite for the Turret tower
         self.sprite = sprites.TURRET_TOWER_SPRITE

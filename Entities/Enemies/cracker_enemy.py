@@ -50,6 +50,9 @@ class Cracker(Enemy):
         Fire damage is ignored (Cracker is immune to fire).
         """
         print(f"OG cracker damage is: {damage}")
+        damage -= self.armour//2
+        if damage < 0.5:
+            damage = 0.5
         if 'damage_type' in kwargs:
             damage_type = kwargs['damage_type']
             if damage_type == "Fire":
@@ -60,11 +63,7 @@ class Cracker(Enemy):
         if self.health <= self.max_health // 2:  # 50% of original health
             if not self.broken:
                 self.become_broken()
-        
-        damage -= self.armour//2
-
-        if damage < 0.5:
-            damage = 0.5
+    
 
         print(f"cracker enemy damage taken is: {damage}")
         

@@ -44,6 +44,7 @@ class Game_State(State):
         self.mouse = Mouse()
 
         self.difficulty = "Normal"
+        self.practise = False
         self.starting_money = GAME_DATA[self.difficulty]["Game_Stats"]["Starting Money"]
         self.money = self.starting_money
         self.starting_health = GAME_DATA[self.difficulty]["Game_Stats"]["Starting Health"]
@@ -104,24 +105,27 @@ class Game_State(State):
         """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                button_clicked = False
+                if event.button == 1:
+                    button_clicked = False
 
-                if self.mouse.current_action == "Placing Tower":
-                    self.tower_manager.place_tower()
-                    button_clicked = True
-
-                for button in self.ui_manager.game_buttons.buttons:
-                    if button.is_hovered():
-                        button.click()
+                    if self.mouse.current_action == "Placing Tower":
+                        self.tower_manager.place_tower()
                         button_clicked = True
 
-                for button in self.ui_manager.tower_selection_menu.buttons:
-                    if button.is_hovered():
-                        button.click()
-                        button_clicked = True
+                    for button in self.ui_manager.game_buttons.buttons:
+                        if button.is_hovered():
+                            button.click()
+                            button_clicked = True
 
-                if not button_clicked:
-                    self.ui_manager.select_tile()
+                    for button in self.ui_manager.tower_selection_menu.buttons:
+                        if button.is_hovered():
+                            button.click()
+                            button_clicked = True
+
+                    if not button_clicked:
+                        self.ui_manager.select_tile()
+                if event.button == 3:
+                    self.mouse.change_current_action(None, None)
 
     def draw(self, screen):
         """
@@ -130,11 +134,9 @@ class Game_State(State):
         Args:
             screen: pygame display surface
         """
-        self.map.draw(screen, self.mouse.map_grid_x, self.mouse.map_grid_y, )  # Draw the game map
+        self.map.draw(screen) # Draw the game map
 
         self.tower_manager.draw(screen)
         self.bullet_manager.draw(screen)
         self.enemy_manager.draw(screen)
         self.ui_manager.draw(screen)
-
-        self.ui_manager.highlight_selected_tower(screen) # Draw Highlight for selection AFTER drawing tower for clarity

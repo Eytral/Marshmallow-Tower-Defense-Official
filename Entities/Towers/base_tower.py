@@ -1,13 +1,14 @@
 from Constants import config, sprites
 from Entities.Projectiles.base_projectile import Projectile
 from abc import ABC, abstractmethod
+import pygame, sys
 
 class Tower(ABC):
     """
     Base class for creating towers in the game. This class handles basic tower mechanics such as shooting, 
     targeting, range checking, and bullet creation. It also includes attributes related to tower stats.
     """
-    def __init__(self, x_grid_pos, y_grid_pos, tower_data=None, range=5, attack_delay=30, bullet_speed=10, bullet_damage=2, cost=10):
+    def __init__(self, x_grid_pos, y_grid_pos, tower_data=None):
         """
         Initializes a Tower instance with the given attributes.
         
@@ -33,14 +34,19 @@ class Tower(ABC):
 
         self.shoot_cooldown = 0  # Cooldown for shooting, starts at 0
         self.target = None  # The current target that the tower is shooting at
+        self.upgrade_level = 0
 
-        self.range = range  # The attack range of the tower
-        self.attack_delay = attack_delay  # The fire rate (how often the tower shoots)
-        self.bullet_speed = bullet_speed  # Speed of the bullet
-        self.bullet_damage = bullet_damage  # Damage dealt by each bullet
-
-        self.cost = cost  # Cost to place the tower
-        self.value = self.cost
+        try:
+            self.range = tower_data[f"UPGRADE {self.upgrade_level}"]["Range"]
+            self.attack_delay = tower_data[f"UPGRADE {self.upgrade_level}"]["Attack Delay"]
+            self.bullet_damage = tower_data[f"UPGRADE {self.upgrade_level}"]["Bullet Damage"]
+            self.bullet_speed = tower_data[f"UPGRADE {self.upgrade_level}"]["Bullet Speed"]
+            self.cost = tower_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
+            self.value = self.cost
+        except TypeError:
+            print("Recieved no tower_data, exiting...")
+            pygame.quit()
+            sys.exit()
 
         self.upgrade_level = 0
         if tower_data != None:
@@ -48,13 +54,41 @@ class Tower(ABC):
 
     def draw(self, screen):
         """
-        Draws the tower and its bullets on the screen.
+        Draws the tower on the screen.
         
         Args:
             screen: pygame display surface where the tower and bullets will be drawn.
         """
         # Draw the tower at its position on the grid
         screen.blit(self.sprite, (self.x_pos, self.y_pos))
+
+
+    def highlight_tower_range(self, screen, **kwargs):
+        left = self.x_pos - self.range * config.GRID_CELL_SIZE
+        top = self.y_pos - self.range * config.GRID_CELL_SIZE
+        width = (self.range * 2 + 1) * config.GRID_CELL_SIZE
+        height = width  # Same as width since the range is a square
+
+        if kwargs:
+            left = kwargs["left"]
+            top = kwargs["top"]
+
+        # Get the map boundaries
+        map_width = config.GRID_SIZE
+        map_height = config.GRID_SIZE
+
+        # Clamp the rectangle to the map's boundaries
+        clamped_left = max(0, left)
+        clamped_top = max(config.SCREEN_TOPBAR_HEIGHT, top)
+        clamped_right = min(map_width, left + width)
+        clamped_bottom = min(config.SCREEN_TOPBAR_HEIGHT+map_height, top + height)
+
+        # Recalculate the clamped rectangle's width and height
+        clamped_width = clamped_right - clamped_left
+        clamped_height = clamped_bottom - clamped_top
+
+        # Draw the clamped rectangle
+        pygame.draw.rect(screen, (0, 0, 255), (clamped_left, clamped_top, clamped_width, clamped_height), 3)
 
     def shoot(self, bullets):
         """
@@ -77,6 +111,14 @@ class Tower(ABC):
             True if the enemy is within range, False otherwise.
         """
         # Check if the enemy is within the tower's range in both x and y directions (grid units)
+        print(f"ENEMY GRID X: {enemy.grid_position[0]}")
+        print(f"TOWER GRID X: {self.x_grid_pos}")
+        print(f"x difference is: {abs(enemy.grid_position[0] - self.x_grid_pos)}")
+        
+        print(f"ENEMY GRID Y: {enemy.grid_position[1]}")
+        print(f"TOWER GRID Y: {self.y_grid_pos}")
+        print(f"y difference is: {abs(enemy.grid_position[1] - self.y_grid_pos)}")
+        print(f"Range is {self.range}")
         return abs(enemy.grid_position[0] - self.x_grid_pos) <= self.range and abs(enemy.grid_position[1] - self.y_grid_pos) <= self.range
 
     def get_target(self, enemies):

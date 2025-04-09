@@ -52,7 +52,7 @@ class SawTower(Tower):
                 "Cost": 250
             }
             }
-        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data, range=2, attack_delay=5, bullet_speed=80, bullet_damage=2, cost=30)
+        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data)
 
         # Set the specific sprite for the Saw tower
         self.sprite = sprites.SAW_TOWER_SPRITE
@@ -62,7 +62,7 @@ class SawTower(Tower):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        bullets.append(Saw(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Saw", bullet_sprite=sprites.SAW_SPRITE))
+        bullets.append(Saw(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage))
 
         # Reset the cooldown to the Attack Delay
         self.shoot_cooldown = self.attack_delay

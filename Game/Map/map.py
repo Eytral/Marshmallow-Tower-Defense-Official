@@ -31,15 +31,23 @@ class Map:
         self.enemy_path = self.determine_enemy_path()
         self.enemy_start_pos = self.determine_enemy_start_pos()
 
-    def draw(self, screen, grid_x, grid_y):
+    def draw(self, screen, **kwargs):
         """
         Renders the map background and grid.
         
         Args:
             screen: pygame display surface.
         """
-        screen.blit(self.background_image, (0, config.SCREEN_TOPBAR_HEIGHT))
-        self.map_grid.draw(screen, grid_x, grid_y)
+        # If background image desired:
+        # screen.blit(self.background_image, (0, config.SCREEN_TOPBAR_HEIGHT))
+        self.map_grid.draw(screen)
+
+    def preview_tower_placement_square(self, screen, grid_x, grid_y):
+        result = self.check_tile((grid_x, grid_y))
+        if result == "empty space":
+            self.map_grid.highlight_square(screen, grid_x, grid_y, (0, 200, 25))
+        else:
+            self.map_grid.highlight_square(screen, grid_x, grid_y, (255, 0, 0))
 
     def check_tile(self, grid_coords):
         """

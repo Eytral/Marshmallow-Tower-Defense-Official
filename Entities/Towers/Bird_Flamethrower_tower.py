@@ -21,38 +21,38 @@ class BirdFlamethrowerTower(Tower):
         tower_data = {
 
             "UPGRADE 0": {
-                "Range": 3,
-                "Attack delay": 15,
+                "Range": 2,
+                "Attack Delay": 2,
                 "Bullet Speed": 10,
-                "Bullet Damage": 5,
+                "Bullet Damage": 0.1,
                 "Cost": 45,
             },
 
             "UPGRADE 1": {
-                "Range": 3,
-                "Attack delay": 13,
+                "Range": 2,
+                "Attack Delay": 2,
                 "Bullet Speed": 14,
-                "Bullet Damage": 7,
+                "Bullet Damage": 0.1,
                 "Cost": 100,
             },
 
             "UPGRADE 2": {
-                "Range": 4,
-                "Attack delay": 10,
+                "Range": 2.5,
+                "Attack Delay": 1,
                 "Bullet Speed": 18,
-                "Bullet Damage": 10,
+                "Bullet Damage": 0.2,
                 "Cost": 150,
             },
 
             "UPGRADE 3": {
-                "Range": 5,
-                "Attack delay": 6,
+                "Range": 3,
+                "Attack Delay": 0,
                 "Bullet Speed": 20,
-                "Bullet Damage": 15,
+                "Bullet Damage": 0.25,
                 "Cost": 250,
             }
         }
-        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data, range=3, attack_delay=15, bullet_speed=10, bullet_damage=5, cost=45)
+        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data)
         
         # Set the specific sprite for the BirdFlamethrower tower
         self.sprite = sprites.BIRDFLAMETHROWER_TOWER_SPRITE
@@ -63,7 +63,7 @@ class BirdFlamethrowerTower(Tower):
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        bullets.append(Flame(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, bullet_type="Fire", bullet_sprite=sprites.FIREBALL_SPRITE))
+        bullets.append(Flame(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, self.range, (self.x_grid_pos, self.y_grid_pos)))
 
         # Reset the cooldown to the fire rate
         self.shoot_cooldown = self.attack_delay

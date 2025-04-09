@@ -8,7 +8,7 @@ class Projectile():
     Handles the bullet's movement, rendering, and interaction with targets.
     """
     
-    def __init__(self, x_pos, y_pos, target, speed=5, damage=1, tile_splash_radius=0, bullet_type="Default", width=config.GRID_CELL_SIZE//5, height=config.GRID_CELL_SIZE//5, bullet_sprite=sprites.BULLET_SPRITE):
+    def __init__(self, x_pos, y_pos, target, speed=5, damage=1, bullet_type="Default", width=config.GRID_CELL_SIZE//5, height=config.GRID_CELL_SIZE//5, bullet_sprite=sprites.BULLET_SPRITE):
         """
         Initializes the bullet with its properties.
 
@@ -23,7 +23,6 @@ class Projectile():
         self.speed = speed  # Speed at which the bullet moves
         self.damage = damage  # Amount of damage the bullet inflicts
         self.type = bullet_type # Type of Bullet
-        self.tile_splash_radius = tile_splash_radius
 
         self.sprite = bullet_sprite  # Bullet's visual representation (sprite)
 
@@ -103,12 +102,6 @@ class Projectile():
         for initial_enemy in enemies:
             if pygame.Rect.colliderect(self.hitbox, initial_enemy.hitbox):  # Check collision
                 initial_enemy.take_damage(self.damage, damage_type=self.type)
-                if self.tile_splash_radius > 0:
-                    for enemy in enemies:
-                        if enemy != initial_enemy:
-                            splash_radius = self.tile_splash_radius * config.GRID_CELL_SIZE
-                            if self.x_pos-enemy.position[0] <= splash_radius or self.y_pos-enemy.position[1] <= splash_radius:
-                                enemy.take_damage(self.damage//2, damage_type=self.type)
                         
                 self.active = False  # Mark bullet as inactive after hitting an enemy
 

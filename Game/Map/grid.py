@@ -60,7 +60,7 @@ class Grid:
         # Set the tile type at the specified grid coordinates
         self.grid[grid_y][grid_x] = tile
 
-    def draw(self, screen, grid_x, grid_y):
+    def draw(self, screen):
         """
         Renders the grid and highlights the selected cell (if any).
         
@@ -69,7 +69,6 @@ class Grid:
         """
         # Call the function to draw the grid
         self.draw_grid(screen)
-        self.highlight_square(screen, grid_x, grid_y)
 
     def draw_grid(self, screen):
         """
@@ -94,14 +93,14 @@ class Grid:
                                    config.GRID_CELL_SIZE - config.OFFSET_FROM_GRID * 2)
                 
                 # Draw tiles based on their type using color codes
-                if cell == 0:
-                    pygame.draw.rect(screen, (0, 155, 0), rect)  # Dark Green for empty tiles
+                if cell == 0 or cell == 2:
+                    pygame.draw.rect(screen, (0, 100, 0), rect)  # Dark Green for empty/tower tiles
                 if cell == 1:
-                    pygame.draw.rect(screen, (255, 165, 0), rect)  # Orange for path tiles
+                    pygame.draw.rect(screen, (200, 140, 0), rect)  # Orange for path tiles
                 if cell == 3:
-                    pygame.draw.rect(screen, (255, 0, 0), rect)  # Red for starting point tiles
+                    pygame.draw.rect(screen, (0, 200, 0), rect)  # Green for starting point tiles
                 if cell == 4:
-                    pygame.draw.rect(screen, (0, 255, 0), rect)  # Green for ending point tiles
+                    pygame.draw.rect(screen, (200, 0, 0), rect)  # Red for ending point tiles
 
         # Draw a border around the entire grid
         border_rect = pygame.Rect(0, config.SCREEN_TOPBAR_HEIGHT, config.GRID_SIZE, config.GRID_SIZE)
@@ -118,7 +117,8 @@ class Grid:
         """
         if grid_x is not None and grid_y is not None:
             pygame.draw.rect(screen, colour, (grid_x * config.GRID_CELL_SIZE, grid_y * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT, config.GRID_CELL_SIZE, config.GRID_CELL_SIZE), 3)  # Red highlight
-
+        else:
+            raise TypeError
 
 
     def find_path(self):

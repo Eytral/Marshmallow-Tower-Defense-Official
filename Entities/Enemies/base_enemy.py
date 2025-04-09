@@ -74,7 +74,7 @@ class Enemy(ABC):
             self.position = (x1, y1)
             self.centre_position = (self.position[0] + config.GRID_CELL_SIZE//2, self.position[1] + config.GRID_CELL_SIZE//2)
             self.prev_centre_position = copy.deepcopy(self.centre_position)
-            self.grid_position = (x1//config.GRID_CELL_SIZE, y1//config.GRID_CELL_SIZE)
+            self.grid_position = (x1//config.GRID_CELL_SIZE, (y1-config.SCREEN_TOPBAR_HEIGHT)//config.GRID_CELL_SIZE)
             self.hitbox = pygame.Rect(self.position[0], self.position[1], config.GRID_CELL_SIZE, config.GRID_CELL_SIZE)
 
 

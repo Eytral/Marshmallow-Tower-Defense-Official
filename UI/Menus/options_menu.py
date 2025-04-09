@@ -13,6 +13,8 @@ class OptionsMenu(Menu):
         button_data = [
             {"Text": "Main Menu",
              "Action": self.back_to_main_menu},
+            {"Text": "Practise",
+             "Action": self.enable_practise},
             {"Text": "Easy Difficulty",
               "Action": lambda: self.change_difficulty("Easy")},
             {"Text": "Normal Difficulty",
@@ -53,3 +55,7 @@ class OptionsMenu(Menu):
 
     def change_difficulty(self, difficulty):
         self.game.state_manager.states["Game_State"].game_manager.change_difficulty(difficulty)
+
+    def enable_practise(self):
+        self.game.state_manager.states["Game_State"].money = 999999
+        self.game.state_manager.states["Game_State"].health = 999999
