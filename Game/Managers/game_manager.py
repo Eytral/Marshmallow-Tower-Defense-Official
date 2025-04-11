@@ -7,8 +7,10 @@ class GameManager():
     def change_difficulty(self, difficulty):
         self.game_state.difficulty = difficulty
         self.game_state.wave_manager.difficulty = difficulty
-        self.game_state.starting_health = GAME_DATA[difficulty]["Game_Stats"]["Starting Health"]
-        self.game_state.starting_money = GAME_DATA[difficulty]["Game_Stats"]["Starting Money"]
+
+        if not self.game_state.practise:
+            self.game_state.starting_health = GAME_DATA[difficulty]["Game_Stats"]["Starting Health"]
+            self.game_state.starting_money = GAME_DATA[difficulty]["Game_Stats"]["Starting Money"]
         print(f"Successfully changed difficuty to {difficulty}")
 
     def toggle_practise(self):

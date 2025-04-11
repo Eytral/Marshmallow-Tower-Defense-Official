@@ -8,6 +8,7 @@ class Flame(Projectile):
         self.type="Fire"
         self.range = range + range//5
         self.tower_grid_pos = tower_grid_pos
+        self.enemy_hit_list = []
 
     def update(self, enemies):
         super().update(enemies)
@@ -21,8 +22,9 @@ class Flame(Projectile):
         return abs(x_grid_pos - self.tower_grid_pos[0]) <= self.range and abs(y_grid_pos - (self.tower_grid_pos[1])) <= self.range
 
     def check_collisions(self, enemies):
-        for initial_enemy in enemies:
-            if pygame.Rect.colliderect(self.hitbox, initial_enemy.hitbox):  # Check collision
-                initial_enemy.take_damage(self.damage, damage_type=self.type)
+        for enemy in enemies:
+            if enemy not in self.enemy_hit_list:
+                if pygame.Rect.colliderect(self.hitbox, enemy.hitbox):  # Check collision
+                    enemy.take_damage(self.damage, damage_type=self.type)
+                    self.enemy_hit_list.append(enemy)
 
-    

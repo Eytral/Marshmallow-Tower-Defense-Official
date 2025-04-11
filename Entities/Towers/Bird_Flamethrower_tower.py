@@ -24,31 +24,31 @@ class BirdFlamethrowerTower(Tower):
                 "Range": 1,
                 "Attack Delay": 2,
                 "Bullet Speed": 10,
-                "Bullet Damage": 0.1,
+                "Bullet Damage": 1,
                 "Cost": 45,
             },
 
             "UPGRADE 1": {
-                "Range": 1.2,
+                "Range": 1.5,
                 "Attack Delay": 2,
                 "Bullet Speed": 14,
-                "Bullet Damage": 0.1,
+                "Bullet Damage": 1.5,
                 "Cost": 100,
             },
 
             "UPGRADE 2": {
-                "Range": 1.5,
+                "Range": 2,
                 "Attack Delay": 1,
                 "Bullet Speed": 18,
-                "Bullet Damage": 0.2,
+                "Bullet Damage": 2,
                 "Cost": 150,
             },
 
             "UPGRADE 3": {
-                "Range": 2,
+                "Range": 2.5,
                 "Attack Delay": 0,
                 "Bullet Speed": 20,
-                "Bullet Damage": 0.25,
+                "Bullet Damage": 3,
                 "Cost": 250,
             }
         }

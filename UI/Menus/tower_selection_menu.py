@@ -38,7 +38,7 @@ class TowerSelectionMenu(Menu):
                                 "Action": lambda t=tower_type: self.select_tower(t)}
                                 )
             
-        button_data.append({"Text": "Remove Tower",
+        button_data.append({"Text": "Sell Tower",
                             "Action": self.remove_tower})  # Add remove tower button
         
         button_data.append({"Text": "Upgrade Tower",
@@ -96,8 +96,12 @@ class TowerSelectionMenu(Menu):
 
         # Add the cost of the tower
         if selected_tower:
-            # For selected towers, cost is not relevant
+            next_upgrade_level = tower.upgrade_level + 1
+            # For selected towers, upgrade cost is relevant
+            if next_upgrade_level < len(tower.tower_data) - 1:
+                tower_stats["Upgrade Cost"] = tower.tower_data[f"UPGRADE {tower.upgrade_level+1}"]["Cost"]
             tower_stats["Value"] = tower.value
+
         else:
             # For unselected towers, show the cost
             tower_stats["Cost"] = tower.cost

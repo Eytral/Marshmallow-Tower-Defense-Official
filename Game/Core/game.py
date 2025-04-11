@@ -53,7 +53,7 @@ class Game():
             self.screen.fill((0, 0, 0))
 
             # Draw the current state on the screen
-            self.state_manager.draw(self.screen, self.clock.get_fps())
+            self.state_manager.draw(self.screen, round(self.clock.get_fps()))
 
             # Refresh the display
             pygame.display.flip()
