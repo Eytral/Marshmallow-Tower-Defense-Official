@@ -16,7 +16,9 @@ class Flame(Projectile):
             self.active = False
 
     def in_range(self):
-        return abs(self.x_pos - self.tower_grid_pos[0]*config.GRID_CELL_SIZE) <= self.range*config.GRID_CELL_SIZE and abs(self.y_pos - (self.tower_grid_pos[1]*config.GRID_CELL_SIZE+config.SCREEN_TOPBAR_HEIGHT)) <= self.range*config.GRID_CELL_SIZE
+        x_grid_pos = round(self.x_pos/config.GRID_CELL_SIZE)
+        y_grid_pos = round((self.y_pos-config.SCREEN_TOPBAR_HEIGHT)/config.GRID_CELL_SIZE)
+        return abs(x_grid_pos - self.tower_grid_pos[0]) <= self.range and abs(y_grid_pos - (self.tower_grid_pos[1])) <= self.range
 
     def check_collisions(self, enemies):
         for initial_enemy in enemies:

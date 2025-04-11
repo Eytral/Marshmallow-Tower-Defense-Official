@@ -99,11 +99,15 @@ class Projectile():
         self.hitbox = pygame.Rect(self.x_pos - self.width // 2, self.y_pos - self.height // 2, self.width, self.height)
 
     def check_collisions(self, enemies):
-        for initial_enemy in enemies:
-            if pygame.Rect.colliderect(self.hitbox, initial_enemy.hitbox):  # Check collision
-                initial_enemy.take_damage(self.damage, damage_type=self.type)
+        for enemy in enemies:
+            if pygame.Rect.colliderect(self.hitbox, enemy.hitbox):  # Check collision
+                enemy.take_damage(self.damage, damage_type=self.type)
                         
                 self.active = False  # Mark bullet as inactive after hitting an enemy
+    
+    def check_out_of_bounds(self):
+        if self.x_pos > config.SCREEN_SIDEBAR_WIDTH or self.x_pos < 0 or self.y_pos > config.SCREEN_HEIGHT or self.y_pos < 0:
+            self.active = False
 
     def draw(self, screen):
         """ Render the bullet on screen. """

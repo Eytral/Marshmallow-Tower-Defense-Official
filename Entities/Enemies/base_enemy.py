@@ -34,12 +34,11 @@ class Enemy(ABC):
         self.position = copy.deepcopy(start_position)  
         self.prev_position = copy.deepcopy(start_position)
 
+        self.hitbox = pygame.Rect(self.position[0], self.position[1], self.width, self.height)  # Hitbox for collision detection
         self.grid_position = (copy.deepcopy(start_position[0])//config.GRID_CELL_SIZE, copy.deepcopy(start_position[1])//config.GRID_CELL_SIZE) # Convert position to grid
 
-        self.centre_position = (self.position[0] + config.GRID_CELL_SIZE//2, self.position[1] + config.GRID_CELL_SIZE//2)
+        self.centre_position = self.hitbox.center
         self.prev_centre_position = copy.deepcopy(self.centre_position)
-
-        self.hitbox = pygame.Rect(self.position[0], self.position[1], self.width, self.height)  # Hitbox for collision detection
 
         self.health = self.max_health  # Set current health to max health
         self.active = True
@@ -72,7 +71,7 @@ class Enemy(ABC):
             # Update the enemy's position
             self.prev_position = copy.deepcopy(self.position)
             self.position = (x1, y1)
-            self.centre_position = (self.position[0] + config.GRID_CELL_SIZE//2, self.position[1] + config.GRID_CELL_SIZE//2)
+            self.centre_position = self.hitbox.center
             self.prev_centre_position = copy.deepcopy(self.centre_position)
             self.grid_position = (x1//config.GRID_CELL_SIZE, (y1-config.SCREEN_TOPBAR_HEIGHT)//config.GRID_CELL_SIZE)
             self.hitbox = pygame.Rect(self.position[0], self.position[1], config.GRID_CELL_SIZE, config.GRID_CELL_SIZE)

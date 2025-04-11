@@ -22,47 +22,59 @@ class SawTower(Tower):
 
             "UPGRADE 0": {
                 "Range": 2,
-                "Attack Delay": 5,
-                "Bullet Speed": 80,
-                "Bullet Damage": 2,
-                "Cost": 30
+                "Attack Delay": 30,
+                "Bullet Speed": 20,
+                "Bullet Damage": 5,
+                "Cost": 30,
+                "Pierce": 3
             },
 
             "UPGRADE 1": {
                 "Range": 2.5,
-                "Attack Delay": 4,
-                "Bullet Speed": 80,
-                "Bullet Damage": 3,
-                "Cost": 100
+                "Attack Delay": 25,
+                "Bullet Speed": 20,
+                "Bullet Damage": 6,
+                "Cost": 100,
+                "Pierce": 5
             },
 
             "UPGRADE 2": {
                 "Range": 3,
-                "Attack Delay": 3,
-                "Bullet Speed": 80,
-                "Bullet Damage": 4,
-                "Cost": 150
+                "Attack Delay": 20,
+                "Bullet Speed": 20,
+                "Bullet Damage": 7,
+                "Cost": 150,
+                "Pierce": 8
             },
 
             "UPGRADE 3": {
                 "Range": 3,
-                "Attack Delay": 2,
-                "Bullet Speed": 80,
-                "Bullet Damage": 5,
-                "Cost": 250
+                "Attack Delay": 15,
+                "Bullet Speed": 20,
+                "Bullet Damage": 10,
+                "Cost": 250,
+                "Pierce": 10
             }
             }
         super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data)
 
         # Set the specific sprite for the Saw tower
         self.sprite = sprites.SAW_TOWER_SPRITE
+        self.pierce = self.tower_data["UPGRADE 0"]["Pierce"]
 
     def shoot(self, bullets):
         """
         Fires a bullet towards the target.
         """
         # Create a bullet and add it to the list of bullets
-        bullets.append(Saw(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage))
+        bullets.append(Saw(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage, self.pierce))
 
         # Reset the cooldown to the Attack Delay
         self.shoot_cooldown = self.attack_delay
+
+    def upgrade(self, money):
+        result = super().upgrade(money)
+        if result[0]:
+            self.pierce = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Pierce"]
+        return result
+
