@@ -1,5 +1,15 @@
 from Game.Core.game import Game
 
-if __name__ == "__main__":
+def main():
     game = Game()
     game.run()
+
+if __name__ == "__main__":
+    main()
+
+# Use for performance testing:
+"""
+import pstats
+import cProfile
+cProfile.run("main()", sort="cumtime")"
+"""
