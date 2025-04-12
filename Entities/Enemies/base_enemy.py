@@ -118,7 +118,7 @@ class Enemy(ABC):
         Handles the enemy's death logic, removing it from the game.
         """
         game_state.money += self.reward
-        self.remove_self()
+        self.remove_self(game_state)
         print(f"Enemy has died")
 
     def remove_self(self, game_state):
@@ -128,7 +128,7 @@ class Enemy(ABC):
     def attack(self, game_state):
         """Applies damage to the game state when the enemy reaches the end."""
         game_state.health -= self.damage
-        self.remove_self()
+        self.remove_self(game_state)
         print(f"Enemy has reached end")
 
     def check_is_dead(self):
