@@ -1,5 +1,4 @@
 from UI.Menus.base_menu import Menu
-import pygame
 from Constants import config
 
 class MainMenu(Menu):

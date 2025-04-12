@@ -1,6 +1,5 @@
 from States.base_state import State
 import pygame
-from Constants import config
 from UI.Menus.main_menu import MainMenu
 from UI.Menus.options_menu import OptionsMenu
 from UI.Menus.level_select_menu import LevelSelectMenu

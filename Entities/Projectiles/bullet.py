@@ -1,5 +1,4 @@
 from Entities.Projectiles.base_projectile import Projectile
-from Constants import config, sprites
 
 class Bullet(Projectile):
     """

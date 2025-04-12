@@ -1,5 +1,5 @@
 from Entities.Projectiles.base_projectile import Projectile
-from Constants import config, sprites
+from Constants import sprites
 
 class Laser(Projectile):
     """

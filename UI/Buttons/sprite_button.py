@@ -1,11 +1,10 @@
 from UI.Buttons.button_class import Button
-import pygame
 
 class SpriteButton(Button):
     """
     A button that displays different sprites depending on its state (normal, hovered, clicked).
     """
-    
+
     def __init__(self, position, action, width, height, sprite, hover_sprite, click_sprite, text=None, font=None):
         """
         Initializes the SpriteButton with its properties and sprite images.

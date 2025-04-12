@@ -1,4 +1,4 @@
-from Constants import sprites, config
+from Constants import config
 import copy
 import pygame
 from abc import ABC
@@ -118,14 +118,18 @@ class Enemy(ABC):
         Handles the enemy's death logic, removing it from the game.
         """
         game_state.money += self.reward
+        self.remove_self()
+        print(f"Enemy has died")
+
+    def remove_self(self, game_state):
         game_state.enemy_manager.enemies.remove(self)
         self.active = False
-        print(f"Enemy has died")
 
     def attack(self, game_state):
         """Applies damage to the game state when the enemy reaches the end."""
         game_state.health -= self.damage
-        self.die(game_state)
+        self.remove_self()
+        print(f"Enemy has reached end")
 
     def check_is_dead(self):
         """Checks if the enemy is dead based on its health."""

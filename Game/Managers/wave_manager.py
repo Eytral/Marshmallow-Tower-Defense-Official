@@ -1,7 +1,5 @@
 import math
 import random
-from Constants import config
-from Entities.Enemies.base_enemy import Enemy
 from Game.Core.game_data import GAME_DATA
 
 class WaveManager:

@@ -2,7 +2,6 @@
 from States.base_state import State 
 
 # Import Game Data
-from Constants import config
 from Game.Core.game_data import GAME_DATA
 
 # Import Map

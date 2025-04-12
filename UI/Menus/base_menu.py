@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from UI.Buttons.rectangle_button import RectangleButton
 from UI.Buttons.sprite_button import SpriteButton
 from Constants import config

@@ -1,6 +1,3 @@
-import pygame
-from Constants import config
-
 class BulletManager():
     """
     Manages the active bullets in the game, including checking collisions and drawing bullets.

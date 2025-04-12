@@ -1,5 +1,5 @@
 from Entities.Enemies.base_enemy import Enemy
-from Constants import sprites, config
+from Constants import sprites
 
 class Smore(Enemy):
     """

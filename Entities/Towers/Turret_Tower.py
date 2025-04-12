@@ -1,6 +1,5 @@
 from Constants import sprites
 from Entities.Towers.base_tower import Tower
-from Entities.Projectiles.bullet import Bullet
 
 class TurretTower(Tower):
     """
