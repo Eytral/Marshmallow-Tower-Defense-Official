@@ -32,7 +32,8 @@ class TowerManager():
                 self.game_state.mouse.change_current_action(None, None) # Reset mouse action and selection
             else:
                 self.game_state.ui_manager.select_tile()
-                self.game_state.ui_manager.change_error_message("Invalid Tower Placement")
+                if self.game_state.mouse.map_grid_x != None and self.game_state.mouse.map_grid_y != None:
+                    self.game_state.ui_manager.change_error_message("Invalid Tower Placement")
         else:
             if self.game_state.map.check_tile((self.game_state.mouse.map_grid_x, self.game_state.mouse.map_grid_y)) != "outside grid":
                 self.game_state.ui_manager.change_error_message ("Not enough money to place tower")
