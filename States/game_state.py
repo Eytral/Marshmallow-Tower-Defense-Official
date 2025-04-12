@@ -59,9 +59,8 @@ class Game_State(State):
         """
         if args:
             level_name = args[0]
-            self.level = level_name
             self.map = Map(level_name)
-            print(f"Entering level {self.level}")
+            print(f"Entering level {level_name}")
         self.wave_manager.reset_waves()
         self.health = self.starting_health
         self.money = self.starting_money

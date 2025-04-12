@@ -52,10 +52,8 @@ class LaserTower(Tower):
                 "Cost": 250
             }
             }
-        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data)
+        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data, sprite=sprites.LASER_TOWER_SPRITE)
 
-        # Set the specific sprite for the Laser tower
-        self.sprite = sprites.LASER_TOWER_SPRITE
 
     def shoot(self, bullets):
         """

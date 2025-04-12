@@ -56,10 +56,8 @@ class SawTower(Tower):
                 "Pierce": 10
             }
             }
-        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data)
+        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data, sprite=sprites.SAW_TOWER_SPRITE)
 
-        # Set the specific sprite for the Saw tower
-        self.sprite = sprites.SAW_TOWER_SPRITE
         self.pierce = self.tower_data["UPGRADE 0"]["Pierce"]
 
     def shoot(self, bullets):

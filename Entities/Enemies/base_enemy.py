@@ -9,7 +9,7 @@ class Enemy(ABC):
     Inherited by specific enemy types to define movement, behavior, and damage handling.
     """
 
-    def __init__(self, start_position, path, reward=5, health=10, speed=2):
+    def __init__(self, start_position, path, sprite=None, reward=5, health=10, speed=2):
         """
         Initializes the enemy with its properties.
 
@@ -20,7 +20,7 @@ class Enemy(ABC):
             health (int): The total health of the enemy. Default is 10.
             speed (int): The movement speed of the enemy. Default is 2.
         """
-        self.sprite = sprites.ENEMY_DEFAULT_SPRITE  # Default sprite for the enemy
+        self.sprite = sprite  # Default sprite for the enemy
         self.reward = reward  # Reward points when the enemy is killed
         self.max_health = health  # Maximum health of the enemy
         self.damage = self.max_health // 2  # Damage is half the max health for the enemy (example logic)
@@ -89,7 +89,10 @@ class Enemy(ABC):
         Args:
             screen (pygame.Surface): The screen or surface to draw the enemy on.
         """
-        screen.blit(self.sprite, (self.position))  # Blit (draw) the sprite at the current position
+        try:
+            screen.blit(self.sprite, (self.position))  # Blit (draw) the sprite at the current position
+        except TypeError:
+            print("No Sprite Detected, cannot draw enemy")
 
     def take_damage(self, damage, **kwargs):
         """

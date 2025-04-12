@@ -57,10 +57,8 @@ class BombTower(Tower):
             }
             }
 
-        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data)
+        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data, sprite=sprites.BOMB_TOWER_SPRITE)
 
-        # Set the specific sprite for the Bomb tower
-        self.sprite = sprites.BOMB_TOWER_SPRITE
         self.tile_splash_radius = self.tower_data["UPGRADE 0"]["Splash Radius"]
 
     def shoot(self, bullets):

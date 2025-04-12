@@ -52,10 +52,7 @@ class BirdFlamethrowerTower(Tower):
                 "Cost": 250,
             }
         }
-        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data)
-        
-        # Set the specific sprite for the BirdFlamethrower tower
-        self.sprite = sprites.BIRDFLAMETHROWER_TOWER_SPRITE
+        super().__init__(x_grid_pos, y_grid_pos, tower_data=tower_data, sprite=sprites.BIRDFLAMETHROWER_TOWER_SPRITE)
         
 
     def shoot(self, bullets):

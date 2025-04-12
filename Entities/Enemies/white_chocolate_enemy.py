@@ -19,12 +19,8 @@ class WhiteChocolate(Enemy):
             path (list): A list of grid coordinates representing the enemy's path.
         """
         # Calls the parent class constructor to set common enemy attributes
-        super().__init__(start_position, path, reward=20, health=40, speed=5)
+        super().__init__(start_position, path, reward=20, health=40, speed=5, sprite=sprites.WHITE_CHOCOLATE_SPRITE)
 
-        # Assigns the default sprite for the White Chocolate
-        self.sprite = sprites.WHITE_CHOCOLATE_SPRITE
-        
-        # Unimplemented sprite for when chocolate "melts":
         self.melted_sprite = sprites.MELTED_WHITE_CHOCOLATE_SPRITE  
 
     def take_damage(self, damage, **kwargs):

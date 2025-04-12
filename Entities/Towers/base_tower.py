@@ -8,7 +8,7 @@ class Tower(ABC):
     Base class for creating towers in the game. This class handles basic tower mechanics such as shooting, 
     targeting, range checking, and bullet creation. It also includes attributes related to tower stats.
     """
-    def __init__(self, x_grid_pos, y_grid_pos, tower_data=None):
+    def __init__(self, x_grid_pos, y_grid_pos, sprite=None, tower_data=None):
         """
         Initializes a Tower instance with the given attributes.
         
@@ -21,7 +21,7 @@ class Tower(ABC):
             bullet_damage: The amount of damage a bullet deals.
             cost: The cost of placing the tower on the map.
         """
-        self.sprite = sprites.TOWER_DEFAULT_SPRITE  # The sprite image for the tower
+        self.sprite = sprite # Tower Sprite
         self.x_grid_pos = x_grid_pos  # The X grid position
         self.y_grid_pos = y_grid_pos  # The Y grid position
 
@@ -60,7 +60,11 @@ class Tower(ABC):
             screen: pygame display surface where the tower and bullets will be drawn.
         """
         # Draw the tower at its position on the grid
-        screen.blit(self.sprite, (self.x_pos, self.y_pos))
+        try:
+            screen.blit(self.sprite, (self.x_pos, self.y_pos))
+        except TypeError:
+            print("No Sprite Detected, cannot draw enemy")
+        
 
 
     def highlight_tower_range(self, screen, **kwargs):
