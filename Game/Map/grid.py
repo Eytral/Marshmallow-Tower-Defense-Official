@@ -6,7 +6,7 @@ class Grid:
     Represents a grid structure that stores map data and handles rendering.
     The grid is used to manage tiles, check for types, and draw the grid on the screen.
     """
-    
+
     def __init__(self, grid):
         """
         Initializes the Grid instance.
@@ -27,22 +27,22 @@ class Grid:
         Returns:
             A string indicating the tile type ("path", "tower", or "empty space").
         """
-        grid_x, grid_y = grid_coords[0], grid_coords[1]
+        grid_x, grid_y = grid_coords
+            
+        if grid_x == None or grid_y == None:
+            return "out of bounds"
         
         # Check if the coordinates are within the bounds of the grid
-        if grid_x is not None and grid_y is not None:
-            if grid_y >= len(self.grid) or grid_y < 0 or grid_x >= len(self.grid[0]) or grid_x < 0:
-                raise IndexError  # Raise an exception if coordinates are out of bounds
-        
+        if grid_y < 0 or grid_y >= len(self.grid) or grid_x < 0 or grid_x >= len(self.grid[0]):
+            return "out of bounds"  # Return a specific error message
+
         # Return tile type based on the value at the coordinates
-            if self.grid[grid_y][grid_x] == 1 or self.grid[grid_y][grid_x] == 3 or self.grid[grid_y][grid_x] == 4:
-                return "path"  # A path tile
-            elif self.grid[grid_y][grid_x] == 2:
-                return "tower"  # A tower tile
-            else:
-                return "empty space"  # An empty space tile
+        if self.grid[grid_y][grid_x] in [1, 3, 4]:
+            return "path"
+        elif self.grid[grid_y][grid_x] == 2:
+            return "tower"
         else:
-            return "outside grid"
+            return "empty space"
 
     def set_tile(self, tile, grid_x, grid_y):
         """
@@ -54,9 +54,9 @@ class Grid:
             grid_y: Y-coordinate of the grid.
         """
         # Check if the coordinates are within bounds
-        if grid_y >= len(self.grid) or grid_y < 0 or grid_x >= len(self.grid[0]) or grid_x < 0:
-            raise IndexError  # Raise an exception if coordinates are out of bounds
-        
+        if grid_y < 0 or grid_y >= len(self.grid) or grid_x < 0 or grid_x >= len(self.grid[0]):
+            raise IndexError("Coordinates are out of bounds.")
+
         # Set the tile type at the specified grid coordinates
         self.grid[grid_y][grid_x] = tile
 
@@ -67,7 +67,6 @@ class Grid:
         Args:
             screen: pygame display surface where the grid will be drawn.
         """
-        # Call the function to draw the grid
         self.draw_grid(screen)
 
     def draw_grid(self, screen):
@@ -77,34 +76,51 @@ class Grid:
         Args:
             screen: pygame display surface where the grid and tiles will be drawn.
         """
-        # Loop through grid cells to draw grid lines
-        for x in range(0, config.GRID_SIZE, config.GRID_CELL_SIZE):
-            for y in range(config.SCREEN_TOPBAR_HEIGHT, config.GRID_SIZE + config.SCREEN_TOPBAR_HEIGHT, config.GRID_CELL_SIZE):
-                # Draw grid lines with light gray color
-                pygame.draw.rect(screen, (200, 200, 200), (x, y, config.GRID_CELL_SIZE, config.GRID_CELL_SIZE), 1)
-
-        # Loop through each row and column of the grid to draw the tiles
         for y, row in enumerate(self.grid):
             for x, cell in enumerate(row):
-                # Define the rectangle for each tile, factoring in the grid offset
-                rect = pygame.Rect(x * config.GRID_CELL_SIZE + config.OFFSET_FROM_GRID, 
-                                   y * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT + config.OFFSET_FROM_GRID, 
-                                   config.GRID_CELL_SIZE - config.OFFSET_FROM_GRID * 2, 
-                                   config.GRID_CELL_SIZE - config.OFFSET_FROM_GRID * 2)
-                
-                # Draw tiles based on their type using color codes
-                if cell == 0 or cell == 2:
-                    pygame.draw.rect(screen, (0, 100, 0), rect)  # Dark Green for empty/tower tiles
-                if cell == 1:
-                    pygame.draw.rect(screen, (200, 140, 0), rect)  # Orange for path tiles
-                if cell == 3:
-                    pygame.draw.rect(screen, (0, 200, 0), rect)  # Green for starting point tiles
-                if cell == 4:
-                    pygame.draw.rect(screen, (200, 0, 0), rect)  # Red for ending point tiles
+                rect = self.get_tile_rect(x, y)
+                self.draw_tile(screen, rect, cell)
 
         # Draw a border around the entire grid
         border_rect = pygame.Rect(0, config.SCREEN_TOPBAR_HEIGHT, config.GRID_SIZE, config.GRID_SIZE)
-        pygame.draw.rect(screen, (0, 0, 255), border_rect, 1)  # Blue border with thickness of 1
+        pygame.draw.rect(screen, (0, 0, 255), border_rect, 1)  # Blue border
+
+    def get_tile_rect(self, x, y):
+        """
+        Get the screen rectangle for a given grid position.
+        
+        Args:
+            x: X-coordinate of the grid.
+            y: Y-coordinate of the grid.
+        
+        Returns:
+            A pygame.Rect object for the tile's screen position.
+        """
+        return pygame.Rect(
+            x * config.GRID_CELL_SIZE + config.OFFSET_FROM_GRID,
+            y * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT + config.OFFSET_FROM_GRID,
+            config.GRID_CELL_SIZE - config.OFFSET_FROM_GRID * 2,
+            config.GRID_CELL_SIZE - config.OFFSET_FROM_GRID * 2
+        )
+
+    def draw_tile(self, screen, rect, cell):
+        """
+        Draws a tile on the screen based on its type.
+        
+        Args:
+            screen: pygame display surface.
+            rect: Rectangle defining the position and size of the tile.
+            cell: Tile type (0, 1, 2, etc.).
+        """
+        color_map = {
+            0: (0, 100, 0),  # Dark Green for empty/tower tiles
+            2: (0, 100, 0),
+            1: (200, 140, 0),  # Orange for path tiles
+            3: (0, 200, 0),  # Green for starting point tiles
+            4: (200, 0, 0)  # Red for ending point tiles
+        }
+        color = color_map.get(cell, (0, 0, 0))  # Default to black if no match
+        pygame.draw.rect(screen, color, rect)
 
     def highlight_square(self, screen, grid_x, grid_y, colour=(255, 0, 0)):
         """
@@ -116,13 +132,18 @@ class Grid:
             grid_y: Y-coordinate of the grid cell.
         """
         if grid_x is not None and grid_y is not None:
-            pygame.draw.rect(screen, colour, (grid_x * config.GRID_CELL_SIZE, grid_y * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT, config.GRID_CELL_SIZE, config.GRID_CELL_SIZE), 3)  # Red highlight
+            rect = self.get_tile_rect(grid_x, grid_y)
+            pygame.draw.rect(screen, colour, rect, 3)  # Highlight the square
         else:
-            raise TypeError
-
+            raise TypeError("Invalid grid coordinates")
 
     def find_path(self):
-    # Find the start position (3)
+        """
+        Finds the path from the start point (3) to the end point (4) using a basic pathfinding method.
+        
+        Returns:
+            A list of screen positions representing the enemy's path.
+        """
         start = None
         for r in range(len(self.grid)):
             for c in range(len(self.grid[r])):
@@ -137,7 +158,6 @@ class Grid:
             return []  # Return an empty list if start not found
 
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Movement directions
-
         path = [start]
         visited = set([start])
         current_position = start
@@ -168,21 +188,24 @@ class Grid:
 
             print(f"Moving from {current_position} to {next_position}")
 
-        print(f"Enemy grid path: {path}")
         # Convert the path coordinates into screen positions
         path_positions = []
         for coordinate in path:
-            x, y = (coordinate[1]) * config.GRID_CELL_SIZE, coordinate[0] * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT
+            x, y = coordinate[1] * config.GRID_CELL_SIZE, coordinate[0] * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT
             path_positions.append((x, y))
-
-        print(f"Enemy path (screen positions): {path_positions}")
 
         return path_positions
         
     def find_enemy_start_pos(self):
+        """
+        Finds the starting position of the enemy (3).
+        
+        Returns:
+            A tuple of (x, y) coordinates representing the enemy's start position.
+        """
         for row_num, row in enumerate(self.grid):
             for column_num, space in enumerate(row):
                 if space == 3:
-                    x, y = column_num*config.GRID_CELL_SIZE, row_num*config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT 
+                    x, y = column_num * config.GRID_CELL_SIZE, row_num * config.GRID_CELL_SIZE + config.SCREEN_TOPBAR_HEIGHT
                     return (x, y)
-        return (0,0)
+        return (0, 0)

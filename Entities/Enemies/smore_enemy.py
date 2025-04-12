@@ -15,7 +15,6 @@ class Smore(Enemy):
         
         Args:
             start_position (tuple): The (x, y) starting position of the enemy.
-            end_position (tuple): The (x, y) ending position of the enemy.
             path (list): A list of grid coordinates representing the enemy's path.
         """
         # Calls the parent class constructor to set common enemy attributes
@@ -24,11 +23,17 @@ class Smore(Enemy):
     def die(self, game_state):
         """
         The unique death mechanic for the Smore: when it dies, it splits into multiple smaller enemies.
-        (Currently unimplemented)
+        
+        Args:
+            game_state (GameState): The current state of the game to spawn new enemies.
+
+        Special mechanic:
+        - Upon death, the Smore splits into four smaller enemies: Cracker, Marshmallow, and Dark Chocolate.
         """
         super().die(game_state)
+        
+        # Spawn multiple smaller enemies upon death
         game_state.create_enemy("cracker enemy", Start_Position=self.position, Path=self.path)
         game_state.create_enemy("marshmallow enemy", Start_Position=self.position, Path=self.path)
         game_state.create_enemy("dark_chocolate enemy", Start_Position=self.position, Path=self.path)
         game_state.create_enemy("cracker enemy", Start_Position=self.position, Path=self.path)
-        

@@ -6,11 +6,17 @@ from States.menu_state import Menu_State
 from States.pause_state import Pause_State
 
 class Game():
-    """Manages the main game loop and window management."""
+    """
+    Manages the main game loop, window management, and game states.
+    """
 
     def __init__(self):
         """
         Initializes the game, sets up the window, and manages states.
+        
+        This method initializes pygame, sets up the game window, 
+        creates a clock to manage the frame rate, and prepares the 
+        game to run in different states (menu, game, pause).
         """
         pygame.init()  # Initialize pygame library
 
@@ -20,13 +26,13 @@ class Game():
 
         self.clock = pygame.time.Clock()  # Create a clock to manage frame rate
         self.running = True  # Controls the game loop execution
-        self.debug = True
+        self.debug = True  # Debug mode flag
         
         # Initialize the state manager and add different game states
         self.state_manager = StateManager() 
-        self.state_manager.add_state("Menu_State", Menu_State(self))
-        self.state_manager.add_state("Game_State", Game_State(self))
-        self.state_manager.add_state("Pause_State", Pause_State(self))
+        self.state_manager.add_state("Menu_State", Menu_State(self))  # Add menu state
+        self.state_manager.add_state("Game_State", Game_State(self))  # Add game state
+        self.state_manager.add_state("Pause_State", Pause_State(self))  # Add pause state
 
         # Start the game in the main menu
         self.state_manager.change_state("Menu_State")
@@ -34,8 +40,12 @@ class Game():
 
     def run(self):
         """
-        Runs the main game loop, handling events, updating states,
+        Runs the main game loop, handling events, updating states, 
         and rendering the game.
+
+        Continuously checks for user input, updates the current state 
+        based on input, and renders the game on the screen at a fixed 
+        frame rate. This loop runs until the user quits the game.
         """
         while self.running:
             # Get all user input events

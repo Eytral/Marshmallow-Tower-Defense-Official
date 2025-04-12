@@ -1,31 +1,41 @@
 from UI.Menus.base_menu import Menu
 import pygame
 from Constants import config
-from UI.Buttons.rectangle_button import RectangleButton
-from UI.Buttons.sprite_button import SpriteButton
 
 class MainMenu(Menu):
+    """
+    MainMenu displays the primary menu where the player can start a new game, access options, or exit the game.
+    """
+
     def __init__(self, game):
         """
-        Initialize the main menu with title font, button font, and buttons.
+        Initialize the main menu with buttons for starting the game, accessing options, or exiting.
 
         Args:
-            game: The game object that holds the state manager and other game elements.
+            game (Game): The main game instance that holds the state manager and other game elements.
         """
-        button_data = [
-            {"Action": self.start_game,
-            "Text": "Start Game"},
-            {"Action": self.open_options,
-            "Text": "Options"},
-            {"Action": self.exit_game,
-            "Text": "Exit"}]
-        
-        
-        for index, button in enumerate(button_data):
-            button["ButtonType"] = "RectangleButton"
-            button["Y_Position"] = config.DEFAULT_MENU_BUTTON_Y_POSITION + (config.DEFAULT_BUTTON_HEIGHT*config.DEFAULT_BUTTON_VERTICAL_OFFSET)*index
+        try:
+            # Define menu buttons and their respective actions
+            button_data = [
+                {"Text": "Start Game", "Action": self.start_game},
+                {"Text": "Options", "Action": self.open_options},
+                {"Text": "Exit", "Action": self.exit_game}
+            ]
 
-        super().__init__(game, "MainMenu", button_data)  # Call the parent class's constructor
+            # Set button appearance and vertical position for each button
+            for index, button in enumerate(button_data):
+                button["ButtonType"] = "RectangleButton"
+                button["Y_Position"] = (
+                    config.DEFAULT_MENU_BUTTON_Y_POSITION +
+                    (config.DEFAULT_BUTTON_HEIGHT * config.DEFAULT_BUTTON_VERTICAL_OFFSET) * index
+                )
+
+            # Initialize the base Menu class with title "MainMenu"
+            super().__init__(game, "Main Menu", button_data)
+
+        except Exception as e:
+            # Log any errors that occur during initialization
+            print(f"[ERROR] Failed to initialize MainMenu: {e}")
 
     def draw(self, screen):
         """
@@ -34,26 +44,44 @@ class MainMenu(Menu):
         Args:
             screen: The Pygame surface to draw the menu on.
         """
-        super().draw(screen)
-        # Create and render the title text
+        try:
+            # Draw the title and buttons using the parent class's draw method
+            super().draw(screen)
+        except Exception as e:
+            # Handle and log any errors during the drawing process
+            print(f"[ERROR] Failed to draw MainMenu: {e}")
 
     # ACTIONS (called when the respective buttons are clicked)
+
     def start_game(self):
         """
-        Action to switch to level select menu when clicking play game.
+        Start the game by switching to the level selection menu.
         """
-        self.game.state_manager.current_state.change_menu("LevelSelectMenu")
+        try:
+            # Change to the LevelSelectMenu
+            self.game.state_manager.current_state.change_menu("LevelSelectMenu")
+        except Exception as e:
+            # Log any errors that occur when trying to start the game
+            print(f"[ERROR] Failed to start the game: {e}")
 
     def open_options(self):
         """
-        Action to open the options menu when 'Options' button is clicked.
-        Updates the current menu to "OptionsMenu".
+        Open the options menu to allow the player to modify game settings.
         """
-        self.game.state_manager.current_state.change_menu("OptionsMenu")
+        try:
+            # Change to the OptionsMenu
+            self.game.state_manager.current_state.change_menu("OptionsMenu")
+        except Exception as e:
+            # Log any errors that occur when trying to open the options menu
+            print(f"[ERROR] Failed to open options menu: {e}")
 
     def exit_game(self):
         """
-        Action to exit the game when 'Exit' button is clicked.
-        Sets the game’s running state to False, which will stop the game loop.
+        Exit the game by setting the running flag to False, stopping the game loop.
         """
-        self.game.running = False
+        try:
+            # Stop the game loop by setting running to False
+            self.game.running = False
+        except Exception as e:
+            # Log any errors that occur when trying to exit the game
+            print(f"[ERROR] Failed to exit the game: {e}")

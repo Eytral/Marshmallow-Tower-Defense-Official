@@ -15,7 +15,6 @@ class Marshmallow(Enemy):
         
         Args:
             start_position (tuple): The (x, y) starting position of the enemy.
-            end_position (tuple): The (x, y) ending position of the enemy.
             path (list): A list of grid coordinates representing the enemy's path.
         """
         # Calls the parent class constructor to set common enemy attributes

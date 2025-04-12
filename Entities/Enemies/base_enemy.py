@@ -15,82 +15,80 @@ class Enemy(ABC):
 
         Args:
             start_position (tuple): Initial position (x, y) where the enemy is placed.
-            end_position ()
+            path (list): The path the enemy follows (list of grid coordinates).
+            sprite (pygame.Surface): The enemy's sprite.
             reward (int): The reward points when the enemy is killed. Default is 5.
             health (int): The total health of the enemy. Default is 10.
             speed (int): The movement speed of the enemy. Default is 2.
         """
-        self.sprite = sprite  # Default sprite for the enemy
-        self.reward = reward  # Reward points when the enemy is killed
-        self.max_health = health  # Maximum health of the enemy
-        self.damage = self.max_health // 2  # Damage is half the max health for the enemy (example logic)
-        self.speed = speed  # Movement speed
+        self.sprite = sprite
+        self.reward = reward
+        self.max_health = health
+        self.damage = self.max_health // 2
+        self.speed = speed
 
-        self.width, self.height = config.GRID_CELL_SIZE, config.GRID_CELL_SIZE  # Set width and height based on grid size
-
-        # Position and grid position calculation
+        # Grid size and position setup
+        self.width, self.height = config.GRID_CELL_SIZE, config.GRID_CELL_SIZE
         self.start_position = copy.deepcopy(start_position)
-
-        self.position = copy.deepcopy(start_position)  
+        self.position = copy.deepcopy(start_position)
         self.prev_position = copy.deepcopy(start_position)
 
-        self.hitbox = pygame.Rect(self.position[0], self.position[1], self.width, self.height)  # Hitbox for collision detection
-        self.grid_position = (copy.deepcopy(start_position[0]+self.width//2)//config.GRID_CELL_SIZE, copy.deepcopy(start_position[1]+self.height//2)//config.GRID_CELL_SIZE) # Convert position to grid
-
+        # Set up hitbox for collision detection
+        self.hitbox = pygame.Rect(self.position[0], self.position[1], self.width, self.height)
+        self.grid_position = (copy.deepcopy(self.position[0] + self.width // 2) // config.GRID_CELL_SIZE,
+                              copy.deepcopy(self.position[1] + self.height // 2) // config.GRID_CELL_SIZE)
         self.centre_position = self.hitbox.center
         self.prev_centre_position = copy.deepcopy(self.centre_position)
 
-        self.health = self.max_health  # Set current health to max health
+        self.health = self.max_health
         self.active = True
-
         self.path = copy.deepcopy(path)
 
     def move(self):
         """
-        Moves the enemy based on its speed. This should be expanded with logic
-        that dictates the movement along the path or grid.
+        Moves the enemy along its path.
         """
         for _ in range(self.speed):
-            target_position = self.path[0]
+            if not self.path:  # Prevent moving when there are no more path points
+                return
 
+            target_position = self.path[0]
             x1, y1 = self.position
             x2, y2 = target_position
-            
-            # Move horizontally
+
+            # Move horizontally and vertically
             if x1 < x2:
                 x1 += 1
             elif x1 > x2:
                 x1 -= 1
-            
-            # Move vertically
+
             if y1 < y2:
                 y1 += 1
             elif y1 > y2:
                 y1 -= 1
-            
-            # Update the enemy's position
+
+            # Update position and hitbox
             self.prev_position = copy.deepcopy(self.position)
             self.position = (x1, y1)
             self.centre_position = self.hitbox.center
             self.prev_centre_position = copy.deepcopy(self.centre_position)
-            self.grid_position = ((x1+self.width//2)//config.GRID_CELL_SIZE, ((y1+self.height//2)-config.SCREEN_TOPBAR_HEIGHT)//config.GRID_CELL_SIZE)
+            self.grid_position = ((x1 + self.width // 2) // config.GRID_CELL_SIZE,
+                                  ((y1 + self.height // 2) - config.SCREEN_TOPBAR_HEIGHT) // config.GRID_CELL_SIZE)
             self.hitbox = pygame.Rect(self.position[0], self.position[1], config.GRID_CELL_SIZE, config.GRID_CELL_SIZE)
 
-
             if self.position == target_position:
-                del self.path[0]
+                del self.path[0]  # Remove the reached path point
                 break
-
 
     def draw(self, screen):
         """
         Draws the enemy on the screen.
 
         Args:
-            screen (pygame.Surface): The screen or surface to draw the enemy on.
+            screen (pygame.Surface): The screen to draw the enemy on.
         """
         try:
-            screen.blit(self.sprite, (self.position))  # Blit (draw) the sprite at the current position
+            screen.blit(self.sprite, (self.position))
         except TypeError:
             print("No Sprite Detected, cannot draw enemy")
 
@@ -100,45 +98,51 @@ class Enemy(ABC):
 
         Args:
             damage (int): The amount of damage taken by the enemy.
-            **kwargs: Additional parameters that might be passed (e.g., from specific tower effects).
+            **kwargs: Additional parameters for special damage types.
         """
-        print(f"Enemy taken {damage} damage")  # Print damage message for debugging
-        self.health -= damage  # Decrease the enemy's health by the damage amount
+        print(f"Enemy taken {damage} damage")
+        self.health -= damage
+
+        # Adjust damage dynamically based on remaining health]
         if not self.check_is_dead():
-            self.damage = self.health//2 + self.max_health//5 # Updates damage to scale with remaining health (plus bonus damage based on enemy toughness)
+            self.update_damage()
+
         print(f"Enemy {self} has {self.health} health left")
+
+    def update_damage(self):
+        """Updates the enemy's damage based on its remaining health."""
+        self.damage = self.health // 2 + self.max_health // 5
 
     def die(self, game_state):
         """
-        Handles the enemy's death logic (set it as dead).
+        Handles the enemy's death logic, removing it from the game.
         """
         game_state.money += self.reward
         game_state.enemy_manager.enemies.remove(self)
         self.active = False
-        print(f"Enemy has reached end (of its life)")  # Print message for debugging
+        print(f"Enemy has died")
 
     def attack(self, game_state):
+        """Applies damage to the game state when the enemy reaches the end."""
         game_state.health -= self.damage
-        game_state.enemy_manager.enemies.remove(self)
-        self.active = False
+        self.die(game_state)
 
     def check_is_dead(self):
-        if self.health <= 0:
-            return True
+        """Checks if the enemy is dead based on its health."""
+        return self.health <= 0
 
     def check_has_reached_end(self):
-        if len(self.path) == 0:
-            print(f"Enemy has reached end")
-            return True
+        """Checks if the enemy has reached the end of the path."""
+        return len(self.path) == 0
 
     def update(self, game_state):
         """
-        Updates the enemy state (e.g., movement, health checks).
+        Updates the enemy state (movement, health checks, etc.).
         """
-        self.move()  # Moves the enemy
-        if self.check_has_reached_end():
-            self.attack(game_state)
+        if self.active:
+            self.move()
+            if self.check_has_reached_end():
+                self.attack(game_state)
 
-        if self.check_is_dead():
-            self.die(game_state)
-
+            if self.check_is_dead():
+                self.die(game_state)

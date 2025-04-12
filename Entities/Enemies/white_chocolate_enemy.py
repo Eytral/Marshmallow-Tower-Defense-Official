@@ -15,12 +15,12 @@ class WhiteChocolate(Enemy):
         
         Args:
             start_position (tuple): The (x, y) starting position of the enemy.
-            end_position (tuple): The (x, y) ending position of the enemy.
             path (list): A list of grid coordinates representing the enemy's path.
         """
         # Calls the parent class constructor to set common enemy attributes
         super().__init__(start_position, path, reward=20, health=40, speed=5, sprite=sprites.WHITE_CHOCOLATE_SPRITE)
 
+        # White Chocolate’s appearance after melting
         self.melted_sprite = sprites.MELTED_WHITE_CHOCOLATE_SPRITE  
 
     def take_damage(self, damage, **kwargs):
@@ -48,8 +48,9 @@ class WhiteChocolate(Enemy):
         """
         When White Chocolate melts:
         - Its speed is reduced.
-        - (Optional) Sprite changes to a melted appearance.
+        - Its sprite changes to a melted appearance.
         """
         self.speed = 2  # Reduce speed after melting
         
-        self.sprite = self.melted_sprite  
+        # Change to melted sprite
+        self.sprite = self.melted_sprite

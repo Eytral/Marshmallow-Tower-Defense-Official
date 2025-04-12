@@ -1,6 +1,6 @@
-from Constants import config, sprites
+from Constants import config
 from Entities.Projectiles.base_projectile import Projectile
-from abc import ABC, abstractmethod
+from abc import ABC
 import pygame, sys
 
 class Tower(ABC):
@@ -21,7 +21,7 @@ class Tower(ABC):
             bullet_damage: The amount of damage a bullet deals.
             cost: The cost of placing the tower on the map.
         """
-        self.sprite = sprite # Tower Sprite
+        self.sprite = sprite  # Tower Sprite
         self.x_grid_pos = x_grid_pos  # The X grid position
         self.y_grid_pos = y_grid_pos  # The Y grid position
 
@@ -37,6 +37,7 @@ class Tower(ABC):
         self.upgrade_level = 0
 
         try:
+            # Extract tower stats from tower_data based on current upgrade level
             self.range = tower_data[f"UPGRADE {self.upgrade_level}"]["Range"]
             self.attack_delay = tower_data[f"UPGRADE {self.upgrade_level}"]["Attack Delay"]
             self.bullet_damage = tower_data[f"UPGRADE {self.upgrade_level}"]["Bullet Damage"]
@@ -44,12 +45,12 @@ class Tower(ABC):
             self.cost = tower_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
             self.value = self.cost
         except TypeError:
-            print("Recieved no tower_data, exiting...")
+            print("Received no tower_data, exiting...")
             pygame.quit()
             sys.exit()
 
         self.upgrade_level = 0
-        if tower_data != None:
+        if tower_data is not None:
             self.tower_data = tower_data
 
     def draw(self, screen):
@@ -64,10 +65,15 @@ class Tower(ABC):
             screen.blit(self.sprite, (self.x_pos, self.y_pos))
         except TypeError:
             print("No Sprite Detected, cannot draw enemy")
-        
-
 
     def highlight_tower_range(self, screen, **kwargs):
+        """
+        Highlights the attack range of the tower on the map.
+        
+        Args:
+            screen: The screen to draw on.
+            kwargs: Optional arguments for custom positioning of the range highlight.
+        """
         left = self.x_pos - self.range * config.GRID_CELL_SIZE
         top = self.y_pos - self.range * config.GRID_CELL_SIZE
         width = (self.range * 2 + 1) * config.GRID_CELL_SIZE
@@ -85,7 +91,7 @@ class Tower(ABC):
         clamped_left = max(0, left)
         clamped_top = max(config.SCREEN_TOPBAR_HEIGHT, top)
         clamped_right = min(map_width, left + width)
-        clamped_bottom = min(config.SCREEN_TOPBAR_HEIGHT+map_height, top + height)
+        clamped_bottom = min(config.SCREEN_TOPBAR_HEIGHT + map_height, top + height)
 
         # Recalculate the clamped rectangle's width and height
         clamped_width = clamped_right - clamped_left
@@ -97,6 +103,9 @@ class Tower(ABC):
     def shoot(self, bullets):
         """
         Fires a bullet towards the target.
+        
+        Args:
+            bullets: List of active bullets to append the new bullet to.
         """
         # Create a bullet and add it to the list of bullets
         bullets.append(Projectile(self.x_centre_pos, self.y_centre_pos, self.target, self.bullet_speed, self.bullet_damage))
@@ -138,9 +147,10 @@ class Tower(ABC):
         
         Args:
             enemies: List of all enemies in the game.
+            bullets: List of all active bullets.
         """
         # If the tower has no target, or the target is dead or has reached the end, find a new target
-        if self.target != None:
+        if self.target is not None:
             if not self.target.active or not self.in_range(self.target):
                 self.target = self.get_target(enemies)
         else:
@@ -159,17 +169,20 @@ class Tower(ABC):
         An abstract method for upgrading the tower. This method should be implemented by any subclass.
 
         Args:
-            money: Amount of money the player has when attempting upgrade
+            money: Amount of money the player has when attempting to upgrade.
+        
+        Returns:
+            A tuple (success, message), where success is a boolean indicating whether the upgrade was successful.
         """
-        if self.upgrade_level < len(self.tower_data)-1:
-            if money >= self.tower_data[f"UPGRADE {self.upgrade_level+1}"]["Cost"]:
+        if self.upgrade_level < len(self.tower_data) - 1:
+            if money >= self.tower_data[f"UPGRADE {self.upgrade_level + 1}"]["Cost"]:
                 self.upgrade_level += 1
                 self.value += self.tower_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
                 self.range = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Range"]
                 self.attack_delay = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Attack Delay"]
                 self.bullet_speed = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Bullet Speed"]
                 self.bullet_damage = self.tower_data[f"UPGRADE {self.upgrade_level}"]["Bullet Damage"]
-                print(f"Tower {self} has been successfuly upgraded")
+                print(f"Tower {self} has been successfully upgraded")
                 return True, self.tower_data[f"UPGRADE {self.upgrade_level}"]["Cost"]
             else:
                 print("Upgrade failed: Not enough money")
@@ -177,4 +190,3 @@ class Tower(ABC):
         else:
             print("Upgrade Failed: Max Level Already!")
             return False, "Max Upgrade Level Reached"
-
