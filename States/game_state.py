@@ -68,10 +68,10 @@ class Game_State(State):
         if args:
             level_name = args[0]
             self.map = Map(level_name)  # Load the map based on the provided level name
+            self.wave_manager.reset_waves() # Reset wave manager when entering a new level
             print(f"Entering level {level_name}")
-        self.wave_manager.reset_waves()  # Reset wave manager when entering a new level
-        self.health = self.starting_health  # Reset health
-        self.money = self.starting_money  # Reset money
+            self.health = self.starting_health  # Reset health
+            self.money = self.starting_money  # Reset money
 
     def exit(self, **kwargs):
         """

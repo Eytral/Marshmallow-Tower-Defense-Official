@@ -33,7 +33,7 @@ class Smore(Enemy):
         super().die(game_state)
         
         # Spawn multiple smaller enemies upon death
-        game_state.create_enemy("cracker enemy", Start_Position=self.position, Path=self.path)
-        game_state.create_enemy("marshmallow enemy", Start_Position=self.position, Path=self.path)
-        game_state.create_enemy("dark_chocolate enemy", Start_Position=self.position, Path=self.path)
-        game_state.create_enemy("cracker enemy", Start_Position=self.position, Path=self.path)
+        game_state.enemy_manager.create_enemy("cracker enemy", Start_Position=self.position, Path=self.path)
+        game_state.enemy_manager.create_enemy("marshmallow enemy", Start_Position=self.position, Path=self.path)
+        game_state.enemy_manager.create_enemy("dark_chocolate enemy", Start_Position=self.position, Path=self.path)
+        game_state.enemy_manager.create_enemy("cracker enemy", Start_Position=self.position, Path=self.path)

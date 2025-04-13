@@ -26,7 +26,7 @@ class BombTower(Tower):
                 "Bullet Speed": 6,
                 "Bullet Damage": 11,
                 "Cost": 50,
-                "Splash Radius": 2
+                "Splash Radius": 1
             },
             
             "UPGRADE 1": {
